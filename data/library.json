@@ -1,0 +1,48 @@
+{
+  "progressions": [
+    {
+      "name": "I–V–vi–IV (Pop)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 120,
+      "tags": ["pop", "classic"],
+      "notes": "Common pop progression in C major.",
+      "chords": [
+        {"root": 0, "quality": "major", "duration": 1},
+        {"root": 7, "quality": "major", "duration": 1},
+        {"root": 9, "quality": "minor", "duration": 1},
+        {"root": 5, "quality": "major", "duration": 1}
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "ii–V–I (Jazz)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 140,
+      "tags": ["jazz"],
+      "notes": "Basic turnaround.",
+      "chords": [
+        {"root": 2, "quality": "minor7", "duration": 1},
+        {"root": 7, "quality": "dominant7", "duration": 1},
+        {"root": 0, "quality": "major7", "duration": 2}
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "i–VII–VI–VII (Aeolian)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 90,
+      "tags": ["minor", "modal"],
+      "notes": "Aeolian feel in A minor.",
+      "chords": [
+        {"root": 9, "quality": "minor", "duration": 1},
+        {"root": 7, "quality": "major", "duration": 1},
+        {"root": 5, "quality": "major", "duration": 1},
+        {"root": 7, "quality": "major", "duration": 1}
+      ],
+      "audio_refs": []
+    }
+  ]
+}

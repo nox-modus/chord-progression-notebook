@@ -1,0 +1,184 @@
+local chord_model = require("lib.chord_model")
+
+local midi_writer = {}
+
+local function ensure_track()
+	local track = reaper.GetSelectedTrack(0, 0)
+	if track then
+		return track
+	end
+
+	track = reaper.GetTrack(0, 0)
+	if track then
+		return track
+	end
+
+	reaper.InsertTrackAtIndex(0, true)
+	return reaper.GetTrack(0, 0)
+end
+
+local function qn_length_to_time_span(start_time, qn_length)
+	local start_qn = reaper.TimeMap2_timeToQN(0, start_time)
+	local end_time = reaper.TimeMap2_QNToTime(0, start_qn + qn_length)
+	return end_time - start_time
+end
+
+local function insert_chord_notes(take, chord, start_time, end_time)
+	local ppq_start = reaper.MIDI_GetPPQPosFromProjTime(take, start_time)
+	local ppq_end = reaper.MIDI_GetPPQPosFromProjTime(take, end_time)
+	local pitches = chord_model.chord_pitches(chord, 4)
+
+	for _, pitch in ipairs(pitches) do
+		reaper.MIDI_InsertNote(take, false, false, ppq_start, ppq_end, 0, pitch, 100, false)
+	end
+end
+
+function midi_writer.insert_chord_at_cursor(chord, qn_duration)
+	local track = ensure_track()
+	local start_time = reaper.GetCursorPosition()
+	local qn = qn_duration or chord.duration or 1
+	local length_time = qn_length_to_time_span(start_time, qn)
+
+	reaper.Undo_BeginBlock()
+
+	local item = reaper.CreateNewMIDIItemInProj(track, start_time, start_time + length_time, false)
+	local take = item and reaper.GetActiveTake(item)
+
+	if take and reaper.TakeIsMIDI(take) then
+		insert_chord_notes(take, chord, start_time, start_time + length_time)
+		reaper.MIDI_Sort(take)
+	end
+
+	reaper.Undo_EndBlock("Insert chord", -1)
+end
+
+function midi_writer.insert_progression(track, start_pos, progression)
+	local target_track = track or ensure_track()
+	local start_time = start_pos or reaper.GetCursorPosition()
+
+	local total_qn = 0
+	for _, chord in ipairs(progression.chords or {}) do
+		total_qn = total_qn + (chord.duration or 1)
+	end
+
+	local end_time = reaper.TimeMap2_QNToTime(0, reaper.TimeMap2_timeToQN(0, start_time) + total_qn)
+
+	reaper.Undo_BeginBlock()
+
+	local item = reaper.CreateNewMIDIItemInProj(target_track, start_time, end_time, false)
+	local take = item and reaper.GetActiveTake(item)
+
+	if take and reaper.TakeIsMIDI(take) then
+		local current_qn = reaper.TimeMap2_timeToQN(0, start_time)
+		for _, chord in ipairs(progression.chords or {}) do
+			local qn_len = chord.duration or 1
+			local chord_start = reaper.TimeMap2_QNToTime(0, current_qn)
+			local chord_end = reaper.TimeMap2_QNToTime(0, current_qn + qn_len)
+			insert_chord_notes(take, chord, chord_start, chord_end)
+			current_qn = current_qn + qn_len
+		end
+		reaper.MIDI_Sort(take)
+	end
+
+	reaper.Undo_EndBlock("Insert progression", -1)
+end
+
+local function collect_midi_notes(take)
+	local notes = {}
+	local _, note_count = reaper.MIDI_CountEvts(take)
+
+	for i = 0, note_count - 1 do
+		local ok, _, _, start_ppq, end_ppq, _, pitch = reaper.MIDI_GetNote(take, i)
+		if ok then
+			notes[#notes + 1] = { start = start_ppq, ending = end_ppq, pitch = pitch }
+		end
+	end
+
+	table.sort(notes, function(a, b)
+		return a.start < b.start
+	end)
+
+	return notes
+end
+
+local function cluster_notes(notes, window)
+	local clusters = {}
+
+	for _, note in ipairs(notes) do
+		local placed = false
+		for _, cluster in ipairs(clusters) do
+			if math.abs(note.start - cluster.start) <= window then
+				cluster.notes[#cluster.notes + 1] = note
+				placed = true
+				break
+			end
+		end
+
+		if not placed then
+			clusters[#clusters + 1] = {
+				start = note.start,
+				notes = { note },
+			}
+		end
+	end
+
+	return clusters
+end
+
+local function pitch_classes_from_cluster(cluster)
+	local pcs = {}
+	for _, note in ipairs(cluster.notes) do
+		pcs[note.pitch % 12] = true
+	end
+	return pcs
+end
+
+function midi_writer.guess_chord(pcs)
+	local best = { score = -1, root = 0, quality = "major" }
+
+	for root = 0, 11 do
+		for quality_name, quality in pairs(chord_model.QUALITIES) do
+			local score = 0
+			for _, interval in ipairs(quality.intervals) do
+				if pcs[(root + interval) % 12] then
+					score = score + 1
+				end
+			end
+			if score > best.score then
+				best = { score = score, root = root, quality = quality_name }
+			end
+		end
+	end
+
+	return {
+		root = best.root,
+		quality = best.quality,
+	}
+end
+
+function midi_writer.detect_from_selected_item()
+	local item = reaper.GetSelectedMediaItem(0, 0)
+	if not item then
+		return nil, "No selected item"
+	end
+
+	local take = reaper.GetActiveTake(item)
+	if not take or not reaper.TakeIsMIDI(take) then
+		return nil, "Selected item is not MIDI"
+	end
+
+	local notes = collect_midi_notes(take)
+	local clusters = cluster_notes(notes, 60)
+
+	local chords = {}
+	for _, cluster in ipairs(clusters) do
+		local pcs = pitch_classes_from_cluster(cluster)
+		local chord = midi_writer.guess_chord(pcs)
+		chord.duration = 1
+		chords[#chords + 1] = chord
+	end
+
+	return chords
+end
+
+return midi_writer

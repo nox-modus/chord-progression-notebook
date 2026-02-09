@@ -55,26 +55,6 @@ local STYLE_COLORS = {
 	{ "ImGui_Col_ScrollbarGrabActive", "wedge_sel" },
 }
 
-local function ensure_grain_cache(state)
-	if state.grain_pts then
-		return
-	end
-
-	local seed = 1337
-	local function rnd()
-		seed = (1103515245 * seed + 12345) % 0x80000000
-		return seed / 0x80000000
-	end
-
-	local count = 2600
-	local pts = {}
-	for i = 1, count do
-		pts[i] = { u = rnd(), v = rnd() }
-	end
-
-	state.grain_pts = pts
-end
-
 local function draw_background(ctx, state)
 	if not reaper.ImGui_GetWindowDrawList then
 		return
@@ -90,16 +70,6 @@ local function draw_background(ctx, state)
 	wh = wh or 0
 
 	reaper.ImGui_DrawList_AddRectFilled(draw_list, wx, wy, wx + ww, wy + wh, PALETTE.bg_base)
-
-	if state.grain_enabled then
-		ensure_grain_cache(state)
-		for i = 1, #state.grain_pts do
-			local p = state.grain_pts[i]
-			local x = wx + p.u * ww
-			local y = wy + p.v * wh
-			reaper.ImGui_DrawList_AddRectFilled(draw_list, x, y, x + 1, y + 1, PALETTE.grain_dot)
-		end
-	end
 
 	local band = 36
 	reaper.ImGui_DrawList_AddRectFilled(draw_list, wx, wy, wx + ww, wy + band, PALETTE.bg_vignette)
@@ -217,12 +187,6 @@ local function draw_left_panel(ctx, state)
 	local changed_show
 	changed_show, state.show_roman = reaper.ImGui_Checkbox(ctx, "Roman Numerals", state.show_roman)
 	if changed_show then
-		state.dirty = true
-	end
-
-	local changed_grain
-	changed_grain, state.grain_enabled = reaper.ImGui_Checkbox(ctx, "Grain Background", state.grain_enabled or false)
-	if changed_grain then
 		state.dirty = true
 	end
 

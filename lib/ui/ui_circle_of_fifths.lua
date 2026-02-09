@@ -38,8 +38,8 @@ local PALETTE = {
 	text_minor = pack_rgba(200, 206, 214, 255),
 	text_roman = pack_rgba(190, 198, 206, 220),
 	text_func = pack_rgba(220, 226, 232, 235),
-	text_dim = pack_rgba(170, 176, 184, 255),
-	dim_accent = pack_rgba(136, 140, 132, 220),
+	text_dim = pack_rgba(196, 204, 214, 255),
+	dim_accent = pack_rgba(188, 196, 206, 245),
 	glow = pack_rgba(120, 150, 190, 90),
 	fun_t = pack_rgba(88, 118, 160, 110),
 	fun_s = pack_rgba(86, 130, 122, 110),
@@ -53,13 +53,19 @@ local PALETTE = {
 
 local CIRCLE_PC_BY_SECTOR = { 0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5 }
 
-local START_ANGLE = -math.pi / 2
 local SECTOR_COUNT = 12
 local SECTOR_ANGLE = (2 * math.pi) / SECTOR_COUNT
+local START_ANGLE = -math.pi / 2 - (SECTOR_ANGLE * 0.5)
+local CURRENT_START_ANGLE = START_ANGLE
 
 local PC_TO_SECTOR = {}
 for sector = 1, #CIRCLE_PC_BY_SECTOR do
 	PC_TO_SECTOR[CIRCLE_PC_BY_SECTOR[sector]] = sector
+end
+
+local function rotated_start_angle(selected_key_pc)
+	local selected_sector = PC_TO_SECTOR[selected_key_pc or 0] or 1
+	return START_ANGLE - ((selected_sector - 1) * SECTOR_ANGLE)
 end
 
 local function minor_name(pc)
@@ -106,7 +112,7 @@ local function wrap_pi(a)
 end
 
 local function sector_a0(index)
-	return START_ANGLE + (index - 1) * SECTOR_ANGLE
+	return CURRENT_START_ANGLE + (index - 1) * SECTOR_ANGLE
 end
 
 local function sector_a1(index)
@@ -205,9 +211,11 @@ local function build_radii(size)
 	local major_outer = base
 	local major_inner = base * 0.86
 	local minor_outer = major_inner
-	local minor_inner = base * 0.72
+	local minor_thickness = (major_inner - (base * 0.72)) * 1.20
+	local minor_inner = minor_outer - minor_thickness
 	local diatonic_outer = minor_inner - 2
-	local diatonic_inner = base * 0.50
+	local roman_thickness_current = ((base * 0.72) - 2) - (base * 0.50)
+	local diatonic_inner = diatonic_outer - (roman_thickness_current * 0.80)
 	local func_outer_offset = 14 * 2.0736
 	local func_inner_offset = 6 * 2.0736
 
@@ -250,6 +258,17 @@ local function build_degree_map(key_root)
 	return degree_pc, degree_sector
 end
 
+local function degree_for_pc(pc, key_root, mode)
+	local scale = chord_model.get_scale_degrees(mode or "major")
+	local rel = chord_model.wrap12((pc or 0) - (key_root or 0))
+	for degree = 1, 7 do
+		if chord_model.wrap12(scale[degree]) == rel then
+			return degree
+		end
+	end
+	return nil
+end
+
 local function make_set(indices)
 	local set = {}
 	for _, index in ipairs(indices) do
@@ -268,7 +287,7 @@ local function hit_test_sector(mouse_x, mouse_y, cx, cy, r_inner, r_outer)
 	end
 
 	local angle = math.atan(dy, dx)
-	local offset = (angle - START_ANGLE + (2 * math.pi)) % (2 * math.pi)
+	local offset = (angle - CURRENT_START_ANGLE + (2 * math.pi)) % (2 * math.pi)
 	return math.floor(offset / SECTOR_ANGLE) + 1
 end
 
@@ -487,11 +506,11 @@ local function draw_roman_labels(ctx, draw_list, degree_sector, primary_set, sec
 
 		local col = item.text:find("°") and PALETTE.text_dim or PALETTE.text_roman
 		if primary_set[sector] then
-			col = alpha_mul(col, 0.5)
+			col = alpha_mul(col, 0.90)
 		elseif secondary_set[sector] then
-			col = alpha_mul(col, 0.25)
+			col = alpha_mul(col, 0.72)
 		else
-			col = alpha_mul(col, 0.12)
+			col = alpha_mul(col, 0.50)
 		end
 
 		draw_text_center_scaled(ctx, draw_list, item.text, x, y, col, 0.75)
@@ -504,8 +523,8 @@ local function draw_vii_pill(ctx, draw_list, degree_pc, degree_sector, size, rad
 	local x, y = xy_on_circle(center_x, center_y, radii.vii_pill, angle)
 
 	local label = "vii° " .. dim_name(degree_pc[7])
-	local bg_col = alpha_mul(PALETTE.ring_inner, 0.55)
-	local text_col = alpha_mul(PALETTE.dim_accent, 0.45)
+	local bg_col = alpha_mul(PALETTE.ring_inner, 0.42)
+	local text_col = alpha_mul(PALETTE.dim_accent, 0.95)
 
 	reaper.ImGui_DrawList_AddCircleFilled(draw_list, x, y, size * 0.030, bg_col, 24)
 	draw_text_center_scaled(ctx, draw_list, label, x, y, text_col, 0.70)
@@ -516,6 +535,7 @@ function ui_circle.draw(ctx, state)
 	if not prog then
 		return
 	end
+	CURRENT_START_ANGLE = rotated_start_angle(prog.key_root or 0)
 
 	if not reaper.ImGui_DrawList_PathArcTo then
 		reaper.ImGui_Text(ctx, "Circle widget requires ImGui draw list path API.")
@@ -550,8 +570,18 @@ function ui_circle.draw(ctx, state)
 	cursor_x = cursor_x or 0
 	cursor_y = cursor_y or 0
 
-	local center_x = cursor_x + draw_size * 0.5
-	local center_y = cursor_y + draw_size * 0.5
+	local offset_x = math.max(0, ((avail_w or draw_size) - draw_size) * 0.5)
+	-- Anchor to top edge so the circle visually connects to the frame on resize.
+	local offset_y = 0
+	local draw_x = cursor_x + offset_x
+	local draw_y = cursor_y + offset_y
+
+	if reaper.ImGui_SetCursorScreenPos then
+		reaper.ImGui_SetCursorScreenPos(ctx, draw_x, draw_y)
+	end
+
+	local center_x = draw_x + draw_size * 0.5
+	local center_y = draw_y + draw_size * 0.5
 
 	reaper.ImGui_InvisibleButton(ctx, "circle", draw_size, draw_size)
 
@@ -562,9 +592,41 @@ function ui_circle.draw(ctx, state)
 		my = my or 0
 
 		hovered_index = hit_test_sector(mx, my, center_x, center_y, radii.key_inner, radii.key_outer)
-		if hovered_index and reaper.ImGui_IsMouseClicked(ctx, 0) then
-			prog.key_root = CIRCLE_PC_BY_SECTOR[hovered_index]
-			state.dirty = true
+		if hovered_index then
+			local clicked_pc = CIRCLE_PC_BY_SECTOR[hovered_index]
+
+			-- Right click: select key/root for the progression.
+			if reaper.ImGui_IsMouseClicked(ctx, 1) then
+				prog.key_root = clicked_pc
+				state.dirty = true
+			end
+
+			-- Left click: assign chord on current progression slot and expose it in inspector.
+			if reaper.ImGui_IsMouseClicked(ctx, 0) then
+				prog.chords = prog.chords or {}
+				if #prog.chords == 0 then
+					prog.chords[1] = { root = clicked_pc, quality = "major", duration = 1 }
+					state.selected_chord = 1
+				end
+
+				local idx = state.selected_chord or 1
+				if idx < 1 then
+					idx = 1
+				end
+				if idx > #prog.chords then
+					idx = #prog.chords
+				end
+
+				local chord = prog.chords[idx]
+				chord.root = clicked_pc
+				local degree = degree_for_pc(clicked_pc, prog.key_root or 0, prog.mode or "major")
+				if degree then
+					chord.quality = chord_model.diatonic_chord_quality(degree, prog.mode or "major")
+				end
+
+				state.selected_chord = idx
+				state.dirty = true
+			end
 		end
 	end
 
@@ -629,14 +691,6 @@ function ui_circle.draw(ctx, state)
 	reaper.ImGui_DrawList_AddCircleFilled(draw_list, center_x, center_y, radii.center_inner, PALETTE.ring_inner, 48)
 	reaper.ImGui_DrawList_AddCircle(draw_list, center_x, center_y, radii.center_inner, PALETTE.border, 48, 1.0)
 	reaper.ImGui_DrawList_AddCircle(draw_list, center_x, center_y, radii.key_outer + 1, PALETTE.glow, 48, 2.0)
-
-	local angle_s = average_relative_angle(s_indices, tonic_angle)
-	local angle_d = average_relative_angle(d_indices, tonic_angle)
-	local angle_t = average_relative_angle(t_indices, tonic_angle)
-	local arrow_r = (radii.diatonic_inner + radii.center_inner) * 0.5
-	draw_arc_arrow(draw_list, center_x, center_y, arrow_r, angle_s, angle_d, PALETTE.arrow)
-	draw_arc_arrow(draw_list, center_x, center_y, arrow_r, angle_d, angle_t, PALETTE.arrow)
-	draw_arc_arrow(draw_list, center_x, center_y, arrow_r, angle_t, angle_s, PALETTE.arrow)
 
 	draw_key_labels(ctx, draw_list, prog, radii, center_x, center_y)
 	draw_function_labels(ctx, draw_list, idx_i, idx_iv, idx_v, radii, center_x, center_y)

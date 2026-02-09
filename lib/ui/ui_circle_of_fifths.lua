@@ -208,8 +208,8 @@ local function build_radii(size)
 	local minor_inner = base * 0.72
 	local diatonic_outer = minor_inner - 2
 	local diatonic_inner = base * 0.50
-	local func_outer_offset = 14 * 1.728
-	local func_inner_offset = 6 * 1.728
+	local func_outer_offset = 14 * 2.0736
+	local func_inner_offset = 6 * 2.0736
 
 	return {
 		major_outer = major_outer,
@@ -532,20 +532,28 @@ function ui_circle.draw(ctx, state)
 		avail_h = avail_w
 	end
 
-	local size = math.min(avail_w or 200, (avail_h or 200) * 0.9)
-	if size < 220 then
-		size = 220
+	local max_dim = math.min(avail_w or 200, (avail_h or 200) * 0.9)
+	local size = math.max(220, max_dim)
+	local radii = build_radii(size)
+	local draw_size = (radii.func_band_outer + 2) * 2
+
+	-- Keep the enlarged functional ring fully inside the widget box to avoid
+	-- overlap with neighbouring UI elements.
+	if draw_size > max_dim and max_dim > 120 then
+		local scale = max_dim / draw_size
+		size = math.max(120, size * scale)
+		radii = build_radii(size)
+		draw_size = (radii.func_band_outer + 2) * 2
 	end
 
 	local cursor_x, cursor_y = reaper.ImGui_GetCursorScreenPos(ctx)
 	cursor_x = cursor_x or 0
 	cursor_y = cursor_y or 0
 
-	local center_x = cursor_x + size * 0.5
-	local center_y = cursor_y + size * 0.5
-	local radii = build_radii(size)
+	local center_x = cursor_x + draw_size * 0.5
+	local center_y = cursor_y + draw_size * 0.5
 
-	reaper.ImGui_InvisibleButton(ctx, "circle", size, size)
+	reaper.ImGui_InvisibleButton(ctx, "circle", draw_size, draw_size)
 
 	local hovered_index = nil
 	if reaper.ImGui_IsItemHovered(ctx) and reaper.ImGui_GetMousePos then

@@ -280,6 +280,39 @@ local function root_pc_for_sector_ring(sector_index, ring_kind)
 	return major_pc
 end
 
+local function infer_ring_from_quality(quality)
+	local q = quality or "major"
+	if q == "minor" or q == "minor7" or q == "diminished" or q == "halfdim7" or q == "dim7" then
+		return "minor"
+	end
+	return "major"
+end
+
+local function quality_for_ring(ring_kind)
+	if ring_kind == "minor" then
+		return "minor"
+	end
+	return "major"
+end
+
+local function is_shift_down(ctx)
+	if not reaper.ImGui_GetIO then
+		return false
+	end
+	local io = reaper.ImGui_GetIO(ctx)
+	return io and io.KeyShift == true
+end
+
+local function sector_for_root_ring(root_pc, ring_kind)
+	local pc = chord_model.wrap12(root_pc or 0)
+	if ring_kind == "minor" then
+		-- Inverse of relative-minor mapping:
+		-- minor_root = major_root + 9  =>  major_root = minor_root + 3.
+		return PC_TO_SECTOR[chord_model.wrap12(pc + 3)]
+	end
+	return PC_TO_SECTOR[pc]
+end
+
 local function hit_test_key_ring(mouse_x, mouse_y, cx, cy, radii)
 	local dx = mouse_x - cx
 	local dy = mouse_y - cy
@@ -457,36 +490,21 @@ local function draw_function_tints(
 	end
 end
 
-local function draw_selected_chord_focus(draw_list, selected_sector, radii, center_x, center_y)
+local function draw_selected_chord_focus(draw_list, selected_sector, selected_ring, radii, center_x, center_y)
 	if not selected_sector then
 		return
 	end
 
 	local a0 = sector_a0(selected_sector)
 	local a1 = sector_a1(selected_sector)
+	local ring_kind = selected_ring or "major"
+	local major_fill = (ring_kind == "major") and PALETTE.select_chord_fill
+		or alpha_mul(PALETTE.select_chord_fill, 0.35)
+	local minor_fill = (ring_kind == "minor") and PALETTE.select_chord_fill_minor
+		or alpha_mul(PALETTE.select_chord_fill_minor, 0.35)
 
-	draw_ring_slice(
-		draw_list,
-		center_x,
-		center_y,
-		radii.major_outer,
-		radii.major_inner,
-		a0,
-		a1,
-		PALETTE.select_chord_fill,
-		24
-	)
-	draw_ring_slice(
-		draw_list,
-		center_x,
-		center_y,
-		radii.minor_outer,
-		radii.minor_inner,
-		a0,
-		a1,
-		PALETTE.select_chord_fill_minor,
-		24
-	)
+	draw_ring_slice(draw_list, center_x, center_y, radii.major_outer, radii.major_inner, a0, a1, major_fill, 24)
+	draw_ring_slice(draw_list, center_x, center_y, radii.minor_outer, radii.minor_inner, a0, a1, minor_fill, 24)
 	draw_ring_slice(
 		draw_list,
 		center_x,
@@ -500,19 +518,38 @@ local function draw_selected_chord_focus(draw_list, selected_sector, radii, cent
 	)
 
 	draw_arc_outline(draw_list, center_x, center_y, radii.major_outer, a0, a1, PALETTE.select_chord_border, 2.2)
-	draw_arc_outline(draw_list, center_x, center_y, radii.minor_inner, a0, a1, PALETTE.select_chord_border, 2.2)
+	draw_arc_outline(
+		draw_list,
+		center_x,
+		center_y,
+		ring_kind == "minor" and radii.minor_inner or radii.major_inner,
+		a0,
+		a1,
+		PALETTE.select_chord_border,
+		2.2
+	)
 	draw_arc_outline(draw_list, center_x, center_y, radii.diatonic_outer, a0, a1, PALETTE.select_chord_border, 1.8)
 
 	-- Strong radial edges for immediate visibility of the selected sector.
-	local x0_outer, y0_outer = xy_on_circle(center_x, center_y, radii.major_outer, a0)
+	local ring_outer = (ring_kind == "minor") and radii.minor_outer or radii.major_outer
+	local x0_outer, y0_outer = xy_on_circle(center_x, center_y, ring_outer, a0)
 	local x0_inner, y0_inner = xy_on_circle(center_x, center_y, radii.diatonic_inner, a0)
-	local x1_outer, y1_outer = xy_on_circle(center_x, center_y, radii.major_outer, a1)
+	local x1_outer, y1_outer = xy_on_circle(center_x, center_y, ring_outer, a1)
 	local x1_inner, y1_inner = xy_on_circle(center_x, center_y, radii.diatonic_inner, a1)
 	reaper.ImGui_DrawList_AddLine(draw_list, x0_inner, y0_inner, x0_outer, y0_outer, PALETTE.select_chord_border, 2.2)
 	reaper.ImGui_DrawList_AddLine(draw_list, x1_inner, y1_inner, x1_outer, y1_outer, PALETTE.select_chord_border, 2.2)
 end
 
-local function draw_key_labels(ctx, draw_list, prog, selected_chord_sector, radii, center_x, center_y)
+local function draw_key_labels(
+	ctx,
+	draw_list,
+	prog,
+	selected_chord_sector,
+	selected_chord_ring,
+	radii,
+	center_x,
+	center_y
+)
 	for sector = 1, 12 do
 		local pc = CIRCLE_PC_BY_SECTOR[sector]
 		local angle = sector_ac(sector)
@@ -527,16 +564,21 @@ local function draw_key_labels(ctx, draw_list, prog, selected_chord_sector, radi
 		local minor_col = ((prog.key_root or 0) == pc) and PALETTE.text_major or alpha_mul(PALETTE.text_minor, 0.90)
 
 		if selected_chord_sector == sector then
-			draw_text_center_scaled(ctx, draw_list, major, x_major, y_major, PALETTE.select_chord_border, 1.18)
-			draw_text_center_scaled(
-				ctx,
-				draw_list,
-				minor,
-				x_minor,
-				y_minor,
-				alpha_mul(PALETTE.select_chord_border, 0.97),
-				1.12
-			)
+			if (selected_chord_ring or "major") == "minor" then
+				draw_text_center(ctx, draw_list, major, x_major, y_major, major_col)
+				draw_text_center_scaled(
+					ctx,
+					draw_list,
+					minor,
+					x_minor,
+					y_minor,
+					alpha_mul(PALETTE.select_chord_border, 0.99),
+					1.18
+				)
+			else
+				draw_text_center_scaled(ctx, draw_list, major, x_major, y_major, PALETTE.select_chord_border, 1.18)
+				draw_text_center(ctx, draw_list, minor, x_minor, y_minor, minor_col)
+			end
 		else
 			draw_text_center(ctx, draw_list, major, x_major, y_major, major_col)
 			draw_text_center(ctx, draw_list, minor, x_minor, y_minor, minor_col)
@@ -629,16 +671,17 @@ function ui_circle.draw(ctx, state)
 		avail_h = avail_w
 	end
 
-	local max_dim = math.min(avail_w or 200, (avail_h or 200) * 0.9)
-	local size = math.max(220, max_dim)
+	-- Keep a small safety margin to avoid 1px overflow that can toggle child scrollbars.
+	local max_dim = math.max(80, math.min(avail_w or 200, avail_h or 200) - 8)
+	local size = math.max(80, max_dim)
 	local radii = build_radii(size)
 	local draw_size = (radii.func_band_outer + 2) * 2
 
 	-- Keep the enlarged functional ring fully inside the widget box to avoid
 	-- overlap with neighbouring UI elements.
-	if draw_size > max_dim and max_dim > 120 then
+	if draw_size > max_dim and max_dim > 10 then
 		local scale = max_dim / draw_size
-		size = math.max(120, size * scale)
+		size = math.max(40, size * scale)
 		radii = build_radii(size)
 		draw_size = (radii.func_band_outer + 2) * 2
 	end
@@ -647,8 +690,8 @@ function ui_circle.draw(ctx, state)
 	cursor_x = cursor_x or 0
 	cursor_y = cursor_y or 0
 
-	local offset_x = math.max(0, ((avail_w or draw_size) - draw_size) * 0.5)
-	-- Anchor to top edge so the circle visually connects to the frame on resize.
+	-- Anchor to top-left border so resizing does not create floating margins.
+	local offset_x = 0
 	local offset_y = 0
 	local draw_x = cursor_x + offset_x
 	local draw_y = cursor_y + offset_y
@@ -682,24 +725,44 @@ function ui_circle.draw(ctx, state)
 			-- Left click: assign chord on current progression slot and expose it in inspector.
 			if reaper.ImGui_IsMouseClicked(ctx, 0) then
 				prog.chords = prog.chords or {}
-				if #prog.chords == 0 then
-					prog.chords[1] = { root = clicked_pc, quality = "major", duration = 1 }
-					state.selected_chord = 1
-				end
-
-				local idx = state.selected_chord or 1
+				local target_quality = quality_for_ring(hovered_ring)
+				local idx = state.selected_chord or #prog.chords
 				if idx < 1 then
 					idx = 1
 				end
-				if idx > #prog.chords then
-					idx = #prog.chords
+
+				if is_shift_down(ctx) then
+					local insert_after = idx
+					if insert_after > #prog.chords then
+						insert_after = #prog.chords
+					end
+					local duration = 1
+					local ref = prog.chords[insert_after]
+					if ref and ref.duration then
+						duration = ref.duration
+					end
+					table.insert(prog.chords, insert_after + 1, {
+						root = clicked_pc,
+						quality = target_quality,
+						duration = duration,
+					})
+					idx = insert_after + 1
+				else
+					if #prog.chords == 0 then
+						prog.chords[1] = { root = clicked_pc, quality = target_quality, duration = 1 }
+						idx = 1
+					end
+					if idx > #prog.chords then
+						idx = #prog.chords
+					end
+					local chord = prog.chords[idx]
+					chord.root = clicked_pc
+					chord.quality = target_quality
 				end
 
-				local chord = prog.chords[idx]
-				chord.root = clicked_pc
 				state.selected_chord = idx
 				state.dirty = true
-				midi_writer.preview_chord(chord, { duration = 0.40, velocity = 112, octave = 4 })
+				midi_writer.preview_chord(prog.chords[idx], { duration = 0.40, velocity = 112, octave = 4 })
 			end
 		end
 	end
@@ -707,8 +770,10 @@ function ui_circle.draw(ctx, state)
 	local degree_pc, degree_sector = build_degree_map(prog.key_root or 0)
 	local selected_chord = prog.chords and prog.chords[state.selected_chord or 1]
 	local selected_chord_sector = nil
+	local selected_chord_ring = nil
 	if selected_chord and selected_chord.root ~= nil then
-		selected_chord_sector = PC_TO_SECTOR[chord_model.wrap12(selected_chord.root)]
+		selected_chord_ring = infer_ring_from_quality(selected_chord.quality)
+		selected_chord_sector = sector_for_root_ring(selected_chord.root, selected_chord_ring)
 	end
 
 	local idx_i = degree_sector[1]
@@ -766,13 +831,13 @@ function ui_circle.draw(ctx, state)
 		center_x,
 		center_y
 	)
-	draw_selected_chord_focus(draw_list, selected_chord_sector, radii, center_x, center_y)
+	draw_selected_chord_focus(draw_list, selected_chord_sector, selected_chord_ring, radii, center_x, center_y)
 
 	reaper.ImGui_DrawList_AddCircleFilled(draw_list, center_x, center_y, radii.center_inner, PALETTE.ring_inner, 48)
 	reaper.ImGui_DrawList_AddCircle(draw_list, center_x, center_y, radii.center_inner, PALETTE.border, 48, 1.0)
 	reaper.ImGui_DrawList_AddCircle(draw_list, center_x, center_y, radii.key_outer + 1, PALETTE.glow, 48, 2.0)
 
-	draw_key_labels(ctx, draw_list, prog, selected_chord_sector, radii, center_x, center_y)
+	draw_key_labels(ctx, draw_list, prog, selected_chord_sector, selected_chord_ring, radii, center_x, center_y)
 	draw_function_labels(ctx, draw_list, idx_i, idx_iv, idx_v, radii, center_x, center_y)
 	draw_roman_labels(ctx, draw_list, degree_sector, primary_set, secondary_set, radii, center_x, center_y)
 	draw_vii_pill(ctx, draw_list, degree_pc, degree_sector, size, radii, center_x, center_y)

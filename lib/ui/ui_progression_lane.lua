@@ -106,6 +106,17 @@ function ui_progression_lane.draw(ctx, state)
 		return
 	end
 
+	ui_progression_lane.draw_toolbar(ctx, state)
+	reaper.ImGui_Separator(ctx)
+	ui_progression_lane.draw_list(ctx, state)
+end
+
+function ui_progression_lane.draw_toolbar(ctx, state)
+	local prog = state.library.progressions[state.selected_progression]
+	if not prog then
+		return
+	end
+
 	reaper.ImGui_Text(ctx, "Progression")
 	reaper.ImGui_SameLine(ctx)
 	if reaper.ImGui_Button(ctx, "Insert Progression MIDI") then
@@ -115,9 +126,13 @@ function ui_progression_lane.draw(ctx, state)
 	if reaper.ImGui_Button(ctx, "Detect From Selected MIDI") then
 		state.detect_requested = true
 	end
+end
 
-	reaper.ImGui_Separator(ctx)
-
+function ui_progression_lane.draw_list(ctx, state)
+	local prog = state.library.progressions[state.selected_progression]
+	if not prog then
+		return
+	end
 	local chords = prog.chords or {}
 	for i, chord in ipairs(chords) do
 		reaper.ImGui_PushID(ctx, i)

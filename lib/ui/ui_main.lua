@@ -208,9 +208,43 @@ local function draw_left_panel(ctx, state)
 end
 
 local function draw_center_panel(ctx, state)
-	ui_progression_lane.draw(ctx, state)
+	ui_progression_lane.draw_toolbar(ctx, state)
 	reaper.ImGui_Separator(ctx)
+
+	local avail_w, avail_h = reaper.ImGui_GetContentRegionAvail(ctx)
+	avail_w = avail_w or 0
+	avail_h = avail_h or 0
+
+	local min_list_h = 90
+	local min_circle_h = 140
+	local spacing_h = 6
+	local total_h = math.max(0, avail_h)
+
+	-- Default target: circle : progression = 3 : 1,
+	-- then clamp by width to avoid dead zone below the circle.
+	local circle_h = total_h * 0.75
+	circle_h = math.min(circle_h, avail_w)
+	circle_h = math.max(min_circle_h, circle_h)
+
+	-- Ensure list retains usable minimum height.
+	local max_circle_from_list = math.max(0, total_h - spacing_h - min_list_h)
+	if circle_h > max_circle_from_list then
+		circle_h = max_circle_from_list
+	end
+	if circle_h < 80 then
+		circle_h = math.max(0, total_h - spacing_h - min_list_h)
+	end
+
+	reaper.ImGui_BeginChild(ctx, "##center_circle_area", -1, circle_h, 1)
 	ui_circle.draw(ctx, state)
+	reaper.ImGui_EndChild(ctx)
+
+	reaper.ImGui_Dummy(ctx, 0, spacing_h)
+
+	-- Fill the remaining height exactly to avoid scrollbar oscillation.
+	reaper.ImGui_BeginChild(ctx, "##progression_bottom_left", -1, -1, 1)
+	ui_progression_lane.draw_list(ctx, state)
+	reaper.ImGui_EndChild(ctx)
 end
 
 local function draw_right_panel(ctx, state)

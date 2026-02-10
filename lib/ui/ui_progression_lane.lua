@@ -3,6 +3,15 @@ local harmony_engine = require("lib.harmony_engine")
 
 local ui_progression_lane = {}
 
+local function pack_rgba(r, g, b, a)
+	return (r << 24) | (g << 16) | (b << 8) | a
+end
+
+local ROW_SELECTED_BG = pack_rgba(96, 126, 168, 230)
+local ROW_SELECTED_HOVER = pack_rgba(112, 144, 188, 235)
+local ROW_SELECTED_ACTIVE = pack_rgba(126, 160, 206, 240)
+local ROW_SELECTED_TEXT = pack_rgba(244, 248, 252, 255)
+
 local function swap(tbl, a, b)
 	tbl[a], tbl[b] = tbl[b], tbl[a]
 end
@@ -115,12 +124,25 @@ function ui_progression_lane.draw(ctx, state)
 
 		local label = chord_label(state, prog, chord)
 		local selected = state.selected_chord == i
+		local style_count = 0
+
+		if selected and reaper.ImGui_PushStyleColor then
+			reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_Header(), ROW_SELECTED_BG)
+			reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_HeaderHovered(), ROW_SELECTED_HOVER)
+			reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_HeaderActive(), ROW_SELECTED_ACTIVE)
+			reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_Text(), ROW_SELECTED_TEXT)
+			style_count = 4
+		end
 
 		if reaper.ImGui_Selectable(ctx, label, selected, reaper.ImGui_SelectableFlags_AllowDoubleClick()) then
 			state.selected_chord = i
 			if reaper.ImGui_IsMouseDoubleClicked(ctx, 0) then
 				state.insert_chord_requested = true
 			end
+		end
+
+		if style_count > 0 and reaper.ImGui_PopStyleColor then
+			reaper.ImGui_PopStyleColor(ctx, style_count)
 		end
 
 		draw_dragdrop(ctx, state, chords, label, i)

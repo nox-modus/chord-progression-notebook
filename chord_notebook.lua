@@ -208,6 +208,7 @@ end
 local function shutdown()
 	save_prefs()
 	save_library_if_needed(false)
+	midi_writer.stop_preview()
 
 	if reaper.ImGui_DestroyContext then
 		pcall(reaper.ImGui_DestroyContext, ctx)
@@ -223,6 +224,7 @@ local function main()
 	clamp_selection()
 	ui_main.draw(ctx, state)
 	handle_requests()
+	midi_writer.update_preview()
 
 	reaper.defer(main)
 end

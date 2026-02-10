@@ -1,6 +1,53 @@
 local chord_model = require("lib.chord_model")
 
 local midi_writer = {}
+local preview_noteoffs = {}
+
+local function clamp7(v)
+	v = math.floor(tonumber(v) or 0)
+	if v < 0 then
+		return 0
+	end
+	if v > 127 then
+		return 127
+	end
+	return v
+end
+
+local function dispatch_live_midi(status, data1, data2)
+	if reaper.StuffMIDIMessage then
+		-- Mode 0 and 1 are both used in the wild across REAPER setups.
+		reaper.StuffMIDIMessage(0, status, data1, data2)
+		reaper.StuffMIDIMessage(1, status, data1, data2)
+	end
+	if reaper.CSurf_OnMidiInput then
+		-- Additional route for control-surface style MIDI input handling.
+		pcall(reaper.CSurf_OnMidiInput, status, data1, data2)
+	end
+end
+
+local function send_note_on(channel, pitch, velocity)
+	local ch = clamp7(channel) % 16
+	local p = clamp7(pitch)
+	local v = clamp7(velocity)
+	dispatch_live_midi(0x90 | ch, p, v)
+end
+
+local function send_note_off(channel, pitch)
+	local ch = clamp7(channel) % 16
+	local p = clamp7(pitch)
+	dispatch_live_midi(0x80 | ch, p, 0)
+end
+
+local function clear_preview_now(channel)
+	for i = #preview_noteoffs, 1, -1 do
+		local evt = preview_noteoffs[i]
+		if channel == nil or evt.channel == channel then
+			send_note_off(evt.channel, evt.pitch)
+			table.remove(preview_noteoffs, i)
+		end
+	end
+end
 
 local function ensure_track()
 	local track = reaper.GetSelectedTrack(0, 0)
@@ -50,6 +97,47 @@ function midi_writer.insert_chord_at_cursor(chord, qn_duration)
 	end
 
 	reaper.Undo_EndBlock("Insert chord", -1)
+end
+
+function midi_writer.preview_chord(chord, opts)
+	opts = opts or {}
+	local channel = opts.channel or 0
+	local velocity = opts.velocity or 100
+	local duration = opts.duration or 0.35
+	local octave = opts.octave or 4
+	local now = reaper.time_precise()
+	local off_time = now + duration
+
+	-- Keep preview monophonic per channel to avoid stacked/stuck notes on rapid clicks.
+	clear_preview_now(channel)
+
+	local pitches = chord_model.chord_pitches(chord, octave)
+	for _, pitch in ipairs(pitches) do
+		send_note_on(channel, pitch, velocity)
+		preview_noteoffs[#preview_noteoffs + 1] = {
+			channel = channel,
+			pitch = pitch,
+			off_time = off_time,
+		}
+	end
+end
+
+function midi_writer.update_preview()
+	if #preview_noteoffs == 0 then
+		return
+	end
+	local now = reaper.time_precise()
+	for i = #preview_noteoffs, 1, -1 do
+		local evt = preview_noteoffs[i]
+		if now >= evt.off_time then
+			send_note_off(evt.channel, evt.pitch)
+			table.remove(preview_noteoffs, i)
+		end
+	end
+end
+
+function midi_writer.stop_preview()
+	clear_preview_now(nil)
 end
 
 function midi_writer.insert_progression(track, start_pos, progression)

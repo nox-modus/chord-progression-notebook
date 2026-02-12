@@ -89,33 +89,6 @@ local function draw_progression_list(ctx, state)
 	end
 end
 
-local function draw_key_mode_controls(ctx, state, prog)
-	reaper.ImGui_Text(ctx, "Key")
-	reaper.ImGui_SameLine(ctx)
-
-	if reaper.ImGui_BeginCombo(ctx, "##libkey", chord_model.note_name(prog.key_root or 0)) then
-		for pc = 0, 11 do
-			if reaper.ImGui_Selectable(ctx, chord_model.note_name(pc), pc == (prog.key_root or 0)) then
-				prog.key_root = pc
-				state.dirty = true
-			end
-		end
-		reaper.ImGui_EndCombo(ctx)
-	end
-
-	reaper.ImGui_SameLine(ctx)
-
-	if reaper.ImGui_BeginCombo(ctx, "##libmode", prog.mode or "major") then
-		for _, mode in ipairs(chord_model.MODES) do
-			if reaper.ImGui_Selectable(ctx, mode, mode == (prog.mode or "major")) then
-				prog.mode = mode
-				state.dirty = true
-			end
-		end
-		reaper.ImGui_EndCombo(ctx)
-	end
-end
-
 function ui_library.draw(ctx, state)
 	if not state.library then
 		return
@@ -135,35 +108,24 @@ function ui_library.draw(ctx, state)
 		state.save_requested = true
 	end
 
-	reaper.ImGui_Separator(ctx)
+	reaper.ImGui_SameLine(ctx)
+	if reaper.ImGui_Button(ctx, "Delete") then
+		local list = state.library.progressions
+		if #list > 1 then
+			table.remove(list, state.selected_progression)
+			if state.selected_progression > #list then
+				state.selected_progression = #list
+			end
+		else
+			list[1] = new_progression_template()
+			state.selected_progression = 1
+		end
+		state.selected_chord = 1
+		state.dirty = true
+	end
 
-	-- Keep key/mode controls visually anchored while the progression list scrolls.
-	local avail_w, avail_h = reaper.ImGui_GetContentRegionAvail(ctx)
-	avail_w = avail_w or 0
-	avail_h = avail_h or 0
-
-	local gap_h = 8
-	local fit_slack_h = 6
-	local min_key_block_h = 56
-	local pref_key_block_h = 76
-	local usable_h = math.max(1, avail_h - fit_slack_h)
-	local key_block_h = math.min(pref_key_block_h, math.max(min_key_block_h, usable_h - gap_h - 1))
-	local list_h = math.max(1, usable_h - key_block_h - gap_h)
-
-	reaper.ImGui_BeginChild(ctx, "##library_progression_list", -1, list_h, 1)
+	reaper.ImGui_BeginChild(ctx, "##library_progression_list", -1, -1, 1)
 	draw_progression_list(ctx, state)
-	reaper.ImGui_EndChild(ctx)
-
-	if gap_h > 0 then
-		reaper.ImGui_Dummy(ctx, 0, gap_h)
-	end
-
-	local prog = state.library.progressions[state.selected_progression]
-	reaper.ImGui_BeginChild(ctx, "##library_key_controls", -1, key_block_h, 0)
-	reaper.ImGui_Separator(ctx)
-	if prog then
-		draw_key_mode_controls(ctx, state, prog)
-	end
 	reaper.ImGui_EndChild(ctx)
 end
 

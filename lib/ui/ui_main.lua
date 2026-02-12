@@ -230,13 +230,44 @@ local function draw_menu(ctx, state)
 	reaper.ImGui_EndMenuBar(ctx)
 end
 
+local function draw_left_key_controls(ctx, state)
+	local prog = state.library.progressions[state.selected_progression]
+	if not prog then
+		return
+	end
+
+	reaper.ImGui_Text(ctx, "Key")
+	reaper.ImGui_SameLine(ctx)
+
+	if reaper.ImGui_BeginCombo(ctx, "##left_key_root", chord_model.note_name(prog.key_root or 0)) then
+		for pc = 0, 11 do
+			if reaper.ImGui_Selectable(ctx, chord_model.note_name(pc), pc == (prog.key_root or 0)) then
+				prog.key_root = pc
+				state.dirty = true
+			end
+		end
+		reaper.ImGui_EndCombo(ctx)
+	end
+
+	reaper.ImGui_SameLine(ctx)
+	if reaper.ImGui_BeginCombo(ctx, "##left_key_mode", prog.mode or "major") then
+		for _, mode in ipairs(chord_model.MODES) do
+			if reaper.ImGui_Selectable(ctx, mode, mode == (prog.mode or "major")) then
+				prog.mode = mode
+				state.dirty = true
+			end
+		end
+		reaper.ImGui_EndCombo(ctx)
+	end
+end
+
 local function draw_left_panel(ctx, state)
 	local avail_w, avail_h = reaper.ImGui_GetContentRegionAvail(ctx)
 	avail_w = avail_w or 0
 	avail_h = avail_h or 0
 
-	local gap_h = 8
-	local controls_h = 108
+	local gap_h = 1
+	local controls_h = 120
 	local lib_h = math.max(1, avail_h - controls_h - gap_h)
 
 	reaper.ImGui_BeginChild(ctx, "##left_library_area", -1, lib_h, 0)
@@ -245,7 +276,16 @@ local function draw_left_panel(ctx, state)
 
 	reaper.ImGui_Dummy(ctx, 0, gap_h)
 
-	reaper.ImGui_BeginChild(ctx, "##left_reharm_area", -1, -1, 0)
+	local settings_flags = 0
+	if reaper.ImGui_WindowFlags_NoScrollbar then
+		settings_flags = settings_flags | reaper.ImGui_WindowFlags_NoScrollbar()
+	end
+	if reaper.ImGui_WindowFlags_NoScrollWithMouse then
+		settings_flags = settings_flags | reaper.ImGui_WindowFlags_NoScrollWithMouse()
+	end
+
+	reaper.ImGui_BeginChild(ctx, "##left_settings_area", -1, -1, 1, settings_flags)
+	draw_left_key_controls(ctx, state)
 	reaper.ImGui_Separator(ctx)
 	reaper.ImGui_Text(ctx, "View / Reharm")
 
@@ -315,7 +355,7 @@ end
 
 local function draw_three_panel_layout(ctx, state)
 	local avail_w = reaper.ImGui_GetContentRegionAvail(ctx)
-	local left_w = 260
+	local left_w = 286
 	local right_w = 360
 	local gap = 8
 	local center_w = avail_w - left_w - right_w - 2 * gap

@@ -1,7 +1,7 @@
 local chord_model = {}
 
 chord_model.NOTE_NAMES = { "C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B" }
-chord_model.MODES = { "major", "minor", "dorian", "phrygian", "lydian", "mixolydian", "locrian" }
+chord_model.MODES = { "major", "minor", "aeolian", "dorian", "phrygian", "lydian", "mixolydian", "locrian" }
 chord_model.DEGREES = { "I", "II", "III", "IV", "V", "VI", "VII" }
 chord_model.QUALITY_ORDER = {
 	"major",
@@ -51,6 +51,31 @@ local SCALE_STEPS = {
 	locrian = { 0, 1, 3, 5, 6, 8, 10 },
 }
 
+local CHROMATIC_ROMAN = {
+	[0] = "I",
+	[1] = "bII",
+	[2] = "II",
+	[3] = "bIII",
+	[4] = "III",
+	[5] = "IV",
+	[6] = "bV",
+	[7] = "V",
+	[8] = "bVI",
+	[9] = "VI",
+	[10] = "bVII",
+	[11] = "VII",
+}
+
+local MODE_ALIASES = {
+	aeolian = "minor",
+	ionian = "major",
+}
+
+function chord_model.normalize_mode(mode)
+	local key = tostring(mode or "major"):lower()
+	return MODE_ALIASES[key] or key
+end
+
 function chord_model.wrap12(n)
 	return (n % 12 + 12) % 12
 end
@@ -87,14 +112,16 @@ function chord_model.chord_symbol(chord)
 end
 
 function chord_model.get_scale_degrees(mode)
-	return SCALE_STEPS[mode or "major"] or SCALE_STEPS.major
+	local normalized = chord_model.normalize_mode(mode)
+	return SCALE_STEPS[normalized] or SCALE_STEPS.major
 end
 
 function chord_model.roman_symbol(chord, key_root, mode)
 	local rel_pc = chord_model.wrap12((chord.root or 0) - (key_root or 0))
-	local scale = chord_model.get_scale_degrees(mode or "major")
+	local scale = chord_model.get_scale_degrees(mode)
+	local quality = chord.quality or "major"
 
-	local degree = 1
+	local degree = nil
 	for i, pc in ipairs(scale) do
 		if chord_model.wrap12(pc) == rel_pc then
 			degree = i
@@ -102,16 +129,33 @@ function chord_model.roman_symbol(chord, key_root, mode)
 		end
 	end
 
-	return chord_model.degree_to_roman(degree, chord.quality or "major") .. (chord.extensions or "")
+	local roman
+	if degree then
+		roman = chord_model.degree_to_roman(degree, quality)
+	else
+		roman = CHROMATIC_ROMAN[rel_pc] or "I"
+		if quality == "minor" or quality == "diminished" or quality == "halfdim7" then
+			roman = roman:lower()
+		end
+
+		if quality == "diminished" or quality == "halfdim7" then
+			roman = roman .. "dim"
+		elseif quality == "augmented" then
+			roman = roman .. "+"
+		end
+	end
+
+	return roman .. (chord.extensions or "")
 end
 
 function chord_model.diatonic_chord_quality(deg, mode)
-	local list = chord_model.DIATONIC[mode or "major"] or chord_model.DIATONIC.major
+	local normalized = chord_model.normalize_mode(mode)
+	local list = chord_model.DIATONIC[normalized] or chord_model.DIATONIC.major
 	return list[deg] or "major"
 end
 
 function chord_model.default_chord_for_degree(deg, key_root, mode)
-	local scale = chord_model.get_scale_degrees(mode or "major")
+	local scale = chord_model.get_scale_degrees(mode)
 	local root = chord_model.wrap12((key_root or 0) + (scale[deg] or 0))
 	return {
 		root = root,

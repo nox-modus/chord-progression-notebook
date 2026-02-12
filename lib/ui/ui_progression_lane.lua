@@ -29,18 +29,6 @@ local function chord_label(state, prog, chord)
 	return string.format("%s  [T:%d B:%d]", symbol, tension, brightness)
 end
 
-local function apply_reharm(state, prog, chord)
-	chord.key_root = prog.key_root
-	chord.mode = prog.mode
-
-	local updated = harmony_engine.reharmonize(chord, state.reharm_mode)
-	for k, v in pairs(updated) do
-		chord[k] = v
-	end
-
-	state.dirty = true
-end
-
 local function draw_context_menu(ctx, state, chords, chord, index)
 	if not reaper.ImGui_BeginPopupContextItem(ctx, "context") then
 		return
@@ -117,8 +105,6 @@ function ui_progression_lane.draw_toolbar(ctx, state)
 		return
 	end
 
-	reaper.ImGui_Text(ctx, "Progression")
-	reaper.ImGui_SameLine(ctx)
 	if reaper.ImGui_Button(ctx, "Insert Progression MIDI") then
 		state.insert_progression_requested = true
 	end
@@ -162,20 +148,6 @@ function ui_progression_lane.draw_list(ctx, state)
 
 		draw_dragdrop(ctx, state, chords, label, i)
 		draw_context_menu(ctx, state, chords, chord, i)
-
-		if reaper.ImGui_IsItemHovered(ctx) then
-			local wheel = 0
-			if reaper.ImGui_GetMouseWheel then
-				wheel = reaper.ImGui_GetMouseWheel(ctx)
-			else
-				local io = reaper.ImGui_GetIO(ctx)
-				wheel = io and io.MouseWheel or 0
-			end
-
-			if wheel ~= 0 then
-				apply_reharm(state, prog, chord)
-			end
-		end
 
 		reaper.ImGui_PopID(ctx)
 	end

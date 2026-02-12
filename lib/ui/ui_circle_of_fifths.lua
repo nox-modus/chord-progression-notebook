@@ -672,7 +672,7 @@ function ui_circle.draw(ctx, state)
 	end
 
 	-- Keep a small safety margin to avoid 1px overflow that can toggle child scrollbars.
-	local max_dim = math.max(80, math.min(avail_w or 200, avail_h or 200) - 8)
+	local max_dim = math.max(10, math.min(avail_w or 200, avail_h or 200) - 8)
 	local size = math.max(80, max_dim)
 	local radii = build_radii(size)
 	local draw_size = (radii.func_band_outer + 2) * 2
@@ -690,9 +690,9 @@ function ui_circle.draw(ctx, state)
 	cursor_x = cursor_x or 0
 	cursor_y = cursor_y or 0
 
-	-- Anchor to top-left border so resizing does not create floating margins.
-	local offset_x = 0
-	local offset_y = 0
+	-- Keep equal margin to all sides of the circle frame (stable 4-side anchoring).
+	local offset_x = math.max(0, ((avail_w or draw_size) - draw_size) * 0.5)
+	local offset_y = math.max(0, ((avail_h or draw_size) - draw_size) * 0.5)
 	local draw_x = cursor_x + offset_x
 	local draw_y = cursor_y + offset_y
 

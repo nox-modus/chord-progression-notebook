@@ -6,6 +6,9 @@ local ui_library = require("lib.ui.ui_library")
 local ui_progression_lane = require("lib.ui.ui_progression_lane")
 
 local ui_main = {}
+local MIN_WINDOW_W = 860
+local MIN_WINDOW_H = 560
+local MIN_CIRCLE_DRAW_SIZE = 206
 
 local function ASSERT_CTX(ctx, where)
 	if type(ctx) ~= "userdata" then
@@ -110,50 +113,99 @@ local function draw_suggestions(ctx, state)
 
 	reaper.ImGui_Text(ctx, "Suggestions")
 
-	if reaper.ImGui_Button(ctx, "Diatonic Subs") then
-		state.suggestions = harmony_engine.suggest_diatonic_subs(chord, prog.key_root, prog.mode)
-	end
-	reaper.ImGui_SameLine(ctx)
+	local actions = {
+		{
+			label = "Diatonic Subs",
+			run = function()
+				state.suggestions = harmony_engine.suggest_diatonic_subs(chord, prog.key_root, prog.mode)
+			end,
+		},
+		{
+			label = "Secondary Dom",
+			run = function()
+				state.suggestions = { harmony_engine.secondary_dominant(chord) }
+			end,
+		},
+		{
+			label = "Tritone Sub",
+			run = function()
+				state.suggestions = { harmony_engine.tritone_sub(chord) }
+			end,
+		},
+		{
+			label = "Modal Interchange",
+			run = function()
+				local alt = harmony_engine.modal_interchange(chord, prog.key_root)
+				state.suggestions = alt and { alt } or {}
+			end,
+		},
+		{
+			label = "Dim Passing",
+			run = function()
+				state.suggestions = { harmony_engine.diminished_passing(chord) }
+			end,
+		},
+	}
 
-	if reaper.ImGui_Button(ctx, "Secondary Dom") then
-		state.suggestions = { harmony_engine.secondary_dominant(chord) }
-	end
-	reaper.ImGui_SameLine(ctx)
-
-	if reaper.ImGui_Button(ctx, "Tritone Sub") then
-		state.suggestions = { harmony_engine.tritone_sub(chord) }
-	end
-	reaper.ImGui_SameLine(ctx)
-
-	if reaper.ImGui_Button(ctx, "Modal Interchange") then
-		local alt = harmony_engine.modal_interchange(chord, prog.key_root)
-		state.suggestions = alt and { alt } or {}
-	end
-	reaper.ImGui_SameLine(ctx)
-
-	if reaper.ImGui_Button(ctx, "Dim Passing") then
-		state.suggestions = { harmony_engine.diminished_passing(chord) }
-	end
-
-	if not state.suggestions then
-		return
-	end
-
-	for i, suggestion in ipairs(state.suggestions) do
-		local symbol
-		if state.show_roman then
-			symbol = chord_model.roman_symbol(suggestion, prog.key_root, prog.mode)
-		else
-			symbol = chord_model.chord_symbol(suggestion)
-		end
-
-		local label = string.format("%d) %s", i, symbol)
-		if reaper.ImGui_Selectable(ctx, label, false) then
-			for k, v in pairs(suggestion) do
-				chord[k] = v
+	local max_label_w = 0
+	if reaper.ImGui_CalcTextSize then
+		for _, item in ipairs(actions) do
+			local ok, w = pcall(reaper.ImGui_CalcTextSize, ctx, item.label)
+			if ok and type(w) == "number" and w > max_label_w then
+				max_label_w = w
 			end
-			state.dirty = true
 		end
+	end
+	local button_w = math.max(110, math.floor(max_label_w + 20))
+
+	local avail_w, avail_h = reaper.ImGui_GetContentRegionAvail(ctx)
+	avail_w = avail_w or 0
+	avail_h = avail_h or 0
+
+	local gap = 8
+	local left_w = math.min(math.max(button_w + 12, 124), math.floor(avail_w * 0.45))
+	local right_w = avail_w - left_w - gap
+	local panel_h = math.max(1, avail_h)
+
+	if right_w < 80 then
+		for _, item in ipairs(actions) do
+			if reaper.ImGui_Button(ctx, item.label, button_w, 0) then
+				item.run()
+			end
+		end
+	else
+		reaper.ImGui_BeginChild(ctx, "##suggest_actions", left_w, panel_h, 1)
+		for _, item in ipairs(actions) do
+			if reaper.ImGui_Button(ctx, item.label, button_w, 0) then
+				item.run()
+			end
+		end
+		reaper.ImGui_EndChild(ctx)
+
+		reaper.ImGui_SameLine(ctx, nil, gap)
+
+		reaper.ImGui_BeginChild(ctx, "##suggest_results", right_w, panel_h, 1)
+		if not state.suggestions or #state.suggestions == 0 then
+			reaper.ImGui_TextDisabled(ctx, "No suggestions yet.")
+		else
+			for i, suggestion in ipairs(state.suggestions) do
+				local symbol
+				if state.show_roman then
+					symbol = chord_model.roman_symbol(suggestion, prog.key_root, prog.mode)
+				else
+					symbol = chord_model.chord_symbol(suggestion)
+				end
+
+				local label = string.format("%d) %s", i, symbol)
+				if reaper.ImGui_Selectable(ctx, label, false) then
+					for k, v in pairs(suggestion) do
+						chord[k] = v
+					end
+					state.dirty = true
+				end
+			end
+		end
+		reaper.ImGui_EndChild(ctx)
 	end
 end
 
@@ -179,8 +231,21 @@ local function draw_menu(ctx, state)
 end
 
 local function draw_left_panel(ctx, state)
-	ui_library.draw(ctx, state)
+	local avail_w, avail_h = reaper.ImGui_GetContentRegionAvail(ctx)
+	avail_w = avail_w or 0
+	avail_h = avail_h or 0
 
+	local gap_h = 8
+	local controls_h = 108
+	local lib_h = math.max(1, avail_h - controls_h - gap_h)
+
+	reaper.ImGui_BeginChild(ctx, "##left_library_area", -1, lib_h, 0)
+	ui_library.draw(ctx, state)
+	reaper.ImGui_EndChild(ctx)
+
+	reaper.ImGui_Dummy(ctx, 0, gap_h)
+
+	reaper.ImGui_BeginChild(ctx, "##left_reharm_area", -1, -1, 0)
 	reaper.ImGui_Separator(ctx)
 	reaper.ImGui_Text(ctx, "View / Reharm")
 
@@ -205,6 +270,7 @@ local function draw_left_panel(ctx, state)
 		end
 		reaper.ImGui_EndCombo(ctx)
 	end
+	reaper.ImGui_EndChild(ctx)
 end
 
 local function draw_center_panel(ctx, state)
@@ -216,23 +282,17 @@ local function draw_center_panel(ctx, state)
 	avail_h = avail_h or 0
 
 	local min_list_h = 90
-	local min_circle_h = 140
+	local min_circle_h = MIN_CIRCLE_DRAW_SIZE
 	local spacing_h = 6
 	local total_h = math.max(0, avail_h)
-
-	-- Default target: circle : progression = 3 : 1,
-	-- then clamp by width to avoid dead zone below the circle.
-	local circle_h = total_h * 0.75
-	circle_h = math.min(circle_h, avail_w)
-	circle_h = math.max(min_circle_h, circle_h)
-
-	-- Ensure list retains usable minimum height.
 	local max_circle_from_list = math.max(0, total_h - spacing_h - min_list_h)
+
+	-- Keep circle area square when possible (anchors the ring against all sides
+	-- of its frame), while preserving room for progression list below.
+	local circle_h = math.min(avail_w, max_circle_from_list)
+	circle_h = math.max(min_circle_h, circle_h)
 	if circle_h > max_circle_from_list then
 		circle_h = max_circle_from_list
-	end
-	if circle_h < 80 then
-		circle_h = math.max(0, total_h - spacing_h - min_list_h)
 	end
 
 	reaper.ImGui_BeginChild(ctx, "##center_circle_area", -1, circle_h, 1)
@@ -259,11 +319,18 @@ local function draw_three_panel_layout(ctx, state)
 	local right_w = 360
 	local gap = 8
 	local center_w = avail_w - left_w - right_w - 2 * gap
-	if center_w < 200 then
-		center_w = 200
+	if center_w < 160 then
+		center_w = 160
 	end
 
-	reaper.ImGui_BeginChild(ctx, "##left", left_w, -1, 1)
+	local left_flags = 0
+	if reaper.ImGui_WindowFlags_NoScrollbar then
+		left_flags = left_flags | reaper.ImGui_WindowFlags_NoScrollbar()
+	end
+	if reaper.ImGui_WindowFlags_NoScrollWithMouse then
+		left_flags = left_flags | reaper.ImGui_WindowFlags_NoScrollWithMouse()
+	end
+	reaper.ImGui_BeginChild(ctx, "##left", left_w, -1, 1, left_flags)
 	draw_left_panel(ctx, state)
 	reaper.ImGui_EndChild(ctx)
 
@@ -287,6 +354,10 @@ function ui_main.draw(ctx, state)
 	end
 
 	local style_count = push_style(ctx)
+
+	if reaper.ImGui_SetNextWindowSizeConstraints then
+		reaper.ImGui_SetNextWindowSizeConstraints(ctx, MIN_WINDOW_W, MIN_WINDOW_H, 10000, 10000)
+	end
 
 	local visible, open =
 		reaper.ImGui_Begin(ctx, "Chord Progression Notebook", true, reaper.ImGui_WindowFlags_MenuBar())

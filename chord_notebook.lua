@@ -1,6 +1,6 @@
 -- @description Chord Progression Notebook
 -- @version 0.5.0
--- @author NOX-Chords
+-- @author Nox-Modus
 -- @changelog Maintenance hardening: single-instance lock, safer lifecycle/error handling, deployment metadata.
 -- @about
 --   Transparent chord progression notebook for REAPER.

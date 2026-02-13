@@ -219,11 +219,6 @@ local function draw_menu(ctx, state)
 		return
 	end
 
-	if reaper.ImGui_MenuItem(ctx, "Toggle Roman Numerals", nil, state.show_roman) then
-		state.show_roman = not state.show_roman
-		state.dirty = true
-	end
-
 	if reaper.ImGui_MenuItem(ctx, "Save Library") then
 		state.save_requested = true
 	end

@@ -50,8 +50,8 @@ local PALETTE = {
 	fun_s = pack_rgba(86, 130, 122, 110),
 	fun_d = pack_rgba(104, 118, 170, 110),
 	fun_band_t = pack_rgba(88, 118, 160, 190),
-	fun_band_s = pack_rgba(86, 130, 122, 170),
-	fun_band_d = pack_rgba(104, 118, 170, 170),
+	fun_band_s = pack_rgba(88, 118, 160, 190),
+	fun_band_d = pack_rgba(88, 118, 160, 190),
 	band_border = pack_rgba(150, 170, 190, 160),
 	arrow = pack_rgba(150, 170, 200, 110),
 }
@@ -816,9 +816,10 @@ function ui_circle.draw(ctx, state)
 		1.3
 	)
 
+	-- Keep outer functional band directly aligned to IV-I-V sectors.
 	local t_indices = { idx_i }
-	local s_indices = { idx_ii, idx_iv }
-	local d_indices = { idx_v, idx_vii }
+	local s_indices = { idx_iv }
+	local d_indices = { idx_v }
 
 	draw_function_bands(draw_list, tonic_angle, t_indices, s_indices, d_indices, radii, center_x, center_y)
 	draw_function_tints(

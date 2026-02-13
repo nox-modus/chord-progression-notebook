@@ -1,5 +1,6 @@
 local chord_model = require("lib.chord_model")
 local harmony_engine = require("lib.harmony_engine")
+local midi_writer = require("lib.midi_writer")
 
 local ui_progression_lane = {}
 
@@ -119,7 +120,17 @@ function ui_progression_lane.draw_list(ctx, state)
 	if not prog then
 		return
 	end
+
 	local chords = prog.chords or {}
+	local avail_w, avail_h = reaper.ImGui_GetContentRegionAvail(ctx)
+	avail_w = avail_w or 0
+	avail_h = avail_h or 0
+
+	local gap_h = 6
+	local button_h = 26
+	local list_h = math.max(1, avail_h - button_h - gap_h)
+
+	reaper.ImGui_BeginChild(ctx, "##chord_list_scroll", -1, list_h, 0)
 	for i, chord in ipairs(chords) do
 		reaper.ImGui_PushID(ctx, i)
 
@@ -137,6 +148,7 @@ function ui_progression_lane.draw_list(ctx, state)
 
 		if reaper.ImGui_Selectable(ctx, label, selected, reaper.ImGui_SelectableFlags_AllowDoubleClick()) then
 			state.selected_chord = i
+			midi_writer.preview_chord(chord, { duration = 0.40, velocity = 112, octave = 4 })
 			if reaper.ImGui_IsMouseDoubleClicked(ctx, 0) then
 				state.insert_chord_requested = true
 			end
@@ -151,8 +163,20 @@ function ui_progression_lane.draw_list(ctx, state)
 
 		reaper.ImGui_PopID(ctx)
 	end
+	reaper.ImGui_EndChild(ctx)
 
-	if reaper.ImGui_Button(ctx, "+ Add Chord") then
+	if gap_h > 0 then
+		reaper.ImGui_Dummy(ctx, 0, gap_h)
+	end
+
+	local row_w = reaper.ImGui_GetContentRegionAvail(ctx) or -1
+	local btn_gap = 6
+	local btn_w = -1
+	if row_w and row_w > 0 then
+		btn_w = math.max(60, (row_w - btn_gap) * 0.5)
+	end
+
+	if reaper.ImGui_Button(ctx, "+ Add Chord", btn_w, button_h) then
 		chords[#chords + 1] = {
 			root = prog.key_root or 0,
 			quality = "major",
@@ -160,6 +184,22 @@ function ui_progression_lane.draw_list(ctx, state)
 		}
 		state.selected_chord = #chords
 		state.dirty = true
+	end
+
+	reaper.ImGui_SameLine(ctx, nil, btn_gap)
+	if reaper.ImGui_Button(ctx, "Delete Chord", btn_w, button_h) then
+		local idx = state.selected_chord or #chords
+		if #chords > 0 and idx >= 1 and idx <= #chords then
+			table.remove(chords, idx)
+			if idx > #chords then
+				idx = #chords
+			end
+			if idx < 1 then
+				idx = 1
+			end
+			state.selected_chord = idx
+			state.dirty = true
+		end
 	end
 end
 

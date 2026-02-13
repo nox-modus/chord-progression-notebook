@@ -2,6 +2,15 @@ local chord_model = require("lib.chord_model")
 
 local ui_library = {}
 
+local function pack_rgba(r, g, b, a)
+	return (r << 24) | (g << 16) | (b << 8) | a
+end
+
+local ROW_SELECTED_BG = pack_rgba(96, 126, 168, 230)
+local ROW_SELECTED_HOVER = pack_rgba(112, 144, 188, 235)
+local ROW_SELECTED_ACTIVE = pack_rgba(126, 160, 206, 240)
+local ROW_SELECTED_TEXT = pack_rgba(244, 248, 252, 255)
+
 local function maybe_repair_aeolian_example(prog)
 	if type(prog) ~= "table" then
 		return false
@@ -76,15 +85,54 @@ local function new_progression_template()
 	}
 end
 
+local function progression_name_from_chords(prog)
+	if type(prog) ~= "table" or type(prog.chords) ~= "table" then
+		return "New Progression"
+	end
+
+	local parts = {}
+	for _, chord in ipairs(prog.chords) do
+		if type(chord) == "table" then
+			local symbol = chord_model.roman_symbol({
+				root = chord.root,
+				quality = chord.quality,
+				extensions = "",
+			}, prog.key_root or 0, prog.mode or "major")
+			-- Compact display for diminished degrees in titles.
+			symbol = tostring(symbol):gsub("dim", "°")
+			parts[#parts + 1] = symbol
+		end
+	end
+
+	if #parts == 0 then
+		return "New Progression"
+	end
+	return table.concat(parts, "-")
+end
+
 local function draw_progression_list(ctx, state)
 	for i, prog in ipairs(state.library.progressions) do
 		local label = string.format("%d: %s", i, prog.name or "(unnamed)")
-		if reaper.ImGui_Selectable(ctx, label, state.selected_progression == i) then
+		local selected = state.selected_progression == i
+		local style_count = 0
+		if selected and reaper.ImGui_PushStyleColor then
+			reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_Header(), ROW_SELECTED_BG)
+			reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_HeaderHovered(), ROW_SELECTED_HOVER)
+			reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_HeaderActive(), ROW_SELECTED_ACTIVE)
+			reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_Text(), ROW_SELECTED_TEXT)
+			style_count = 4
+		end
+
+		if reaper.ImGui_Selectable(ctx, label, selected) then
 			state.selected_progression = i
 			state.selected_chord = 1
 			if maybe_repair_aeolian_example(prog) then
 				state.dirty = true
 			end
+		end
+
+		if style_count > 0 and reaper.ImGui_PopStyleColor then
+			reaper.ImGui_PopStyleColor(ctx, style_count)
 		end
 	end
 end
@@ -122,6 +170,15 @@ function ui_library.draw(ctx, state)
 		end
 		state.selected_chord = 1
 		state.dirty = true
+	end
+
+	reaper.ImGui_SameLine(ctx)
+	if reaper.ImGui_Button(ctx, "Auto Name") then
+		local prog = state.library.progressions[state.selected_progression]
+		if prog then
+			prog.name = progression_name_from_chords(prog)
+			state.dirty = true
+		end
 	end
 
 	reaper.ImGui_BeginChild(ctx, "##library_progression_list", -1, -1, 1)

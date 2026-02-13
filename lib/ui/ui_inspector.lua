@@ -98,6 +98,10 @@ local function draw_audio_refs(ctx, state, prog)
 	end
 end
 
+local function draw_notes_field(ctx, prog)
+	return reaper.ImGui_InputText(ctx, "Notes", prog.notes or "")
+end
+
 function ui_inspector.draw(ctx, state)
 	local prog = state.library.progressions[state.selected_progression]
 	if not prog then
@@ -125,7 +129,7 @@ function ui_inspector.draw(ctx, state)
 		state.dirty = true
 	end
 
-	local changed_notes, notes = reaper.ImGui_InputTextMultiline(ctx, "Notes", prog.notes or "", 0, 0, 100)
+	local changed_notes, notes = draw_notes_field(ctx, prog)
 	if changed_notes then
 		prog.notes = notes
 		state.dirty = true

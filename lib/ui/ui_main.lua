@@ -1,5 +1,6 @@
 local chord_model = require("lib.chord_model")
 local harmony_engine = require("lib.harmony_engine")
+local midi_writer = require("lib.midi_writer")
 local ui_circle = require("lib.ui.ui_circle_of_fifths")
 local ui_inspector = require("lib.ui.ui_inspector")
 local ui_library = require("lib.ui.ui_library")
@@ -205,6 +206,7 @@ local function draw_suggestions(ctx, state)
 						chord[k] = v
 					end
 					state.dirty = true
+					midi_writer.preview_chord(chord, { duration = 0.40, velocity = 112, octave = 4 })
 				end
 			end
 		end
@@ -345,7 +347,14 @@ local function draw_center_panel(ctx, state)
 	reaper.ImGui_Dummy(ctx, 0, spacing_h)
 
 	-- Fill the remaining height exactly to avoid scrollbar oscillation.
-	reaper.ImGui_BeginChild(ctx, "##progression_bottom_left", -1, -1, 1)
+	local prog_flags = 0
+	if reaper.ImGui_WindowFlags_NoScrollbar then
+		prog_flags = prog_flags | reaper.ImGui_WindowFlags_NoScrollbar()
+	end
+	if reaper.ImGui_WindowFlags_NoScrollWithMouse then
+		prog_flags = prog_flags | reaper.ImGui_WindowFlags_NoScrollWithMouse()
+	end
+	reaper.ImGui_BeginChild(ctx, "##progression_bottom_left", -1, -1, 1, prog_flags)
 	ui_progression_lane.draw_list(ctx, state)
 	reaper.ImGui_EndChild(ctx)
 end

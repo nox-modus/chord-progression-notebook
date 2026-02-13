@@ -2,6 +2,11 @@ local chord_model = require("lib.chord_model")
 
 local midi_writer = {}
 local preview_noteoffs = {}
+local PREVIEW_CLICK_OPTS = {
+	duration = 0.40,
+	velocity = 112,
+	octave = 4,
+}
 
 local function clamp7(v)
 	v = math.floor(tonumber(v) or 0)
@@ -120,6 +125,13 @@ function midi_writer.preview_chord(chord, opts)
 			off_time = off_time,
 		}
 	end
+end
+
+function midi_writer.preview_click(chord)
+	if not chord then
+		return
+	end
+	midi_writer.preview_chord(chord, PREVIEW_CLICK_OPTS)
 end
 
 function midi_writer.update_preview()

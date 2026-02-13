@@ -762,7 +762,7 @@ function ui_circle.draw(ctx, state)
 
 				state.selected_chord = idx
 				state.dirty = true
-				midi_writer.preview_chord(prog.chords[idx], { duration = 0.40, velocity = 112, octave = 4 })
+				midi_writer.preview_click(prog.chords[idx])
 			end
 		end
 	end

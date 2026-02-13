@@ -1,0 +1,22 @@
+Chord Progression Notebook - Deep Test Routine
+Lua runtime: Lua 5.4
+Timestamp: 2026-02-13 20:12:24
+Root: ./
+
+[PASS] chord_model.normalize_mode aliases
+[PASS] chord_model.wrap12 and note_name
+[PASS] chord_model.degree_to_roman quality markers
+[PASS] chord_model.roman_symbol regression for aeolian sequence
+[PASS] chord_model.roman_symbol diatonic and chromatic
+[PASS] chord_model.chord_symbol formatting
+[PASS] chord_model.default_chord_for_degree major/minor
+[PASS] chord_model.chord_pitches triad/extensions
+[PASS] harmony_engine scores move with quality/extensions
+[PASS] harmony_engine.suggest_diatonic_subs excludes source root
+[PASS] harmony_engine.secondary/tritone transformations
+[PASS] harmony_engine.modal_interchange + diminished passing
+[PASS] harmony_engine.reharmonize mode dispatch
+[PASS] json roundtrip encode/decode
+[PASS] json parse unicode + invalid payload
+
+Result: 15 total, 0 failed, 15 passed

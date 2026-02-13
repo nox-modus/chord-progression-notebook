@@ -148,7 +148,7 @@ function ui_progression_lane.draw_list(ctx, state)
 
 		if reaper.ImGui_Selectable(ctx, label, selected, reaper.ImGui_SelectableFlags_AllowDoubleClick()) then
 			state.selected_chord = i
-			midi_writer.preview_chord(chord, { duration = 0.40, velocity = 112, octave = 4 })
+			midi_writer.preview_click(chord)
 			if reaper.ImGui_IsMouseDoubleClicked(ctx, 0) then
 				state.insert_chord_requested = true
 			end

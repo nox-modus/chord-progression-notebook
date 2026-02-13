@@ -1,3 +1,17 @@
+-- @description Chord Progression Notebook
+-- @version 0.5.0
+-- @author NOX-Chords
+-- @changelog Maintenance hardening: single-instance lock, safer lifecycle/error handling, deployment metadata.
+-- @about
+--   Transparent chord progression notebook for REAPER.
+--   Features progression editing, Roman numerals, circle-of-fifths interaction,
+--   MIDI insertion and suggestion workflow with ReaImGui UI.
+-- @provides
+--   [main] chord_notebook.lua
+--   [nomain] lib/*.lua
+--   [nomain] lib/ui/*.lua
+--   [nomain] data/library.json
+
 local info = debug.getinfo(1, "S")
 local script_path = info.source:match("^@?(.*[\\/])") or ""
 
@@ -20,6 +34,30 @@ local storage = require("lib.storage")
 local ui_main = require("lib.ui.ui_main")
 
 local WINDOW_TITLE = "Chord Progression Notebook"
+local LOCK_SECTION = "ChordNotebook"
+local LOCK_KEY = "instance_lock"
+
+local function acquire_instance_lock()
+	local current = reaper.GetExtState(LOCK_SECTION, LOCK_KEY)
+	if current and current ~= "" then
+		return false
+	end
+	reaper.SetExtState(LOCK_SECTION, LOCK_KEY, tostring(reaper.time_precise()), false)
+	return true
+end
+
+local function release_instance_lock()
+	if reaper.DeleteExtState then
+		reaper.DeleteExtState(LOCK_SECTION, LOCK_KEY, false)
+	else
+		reaper.SetExtState(LOCK_SECTION, LOCK_KEY, "", false)
+	end
+end
+
+if not acquire_instance_lock() then
+	reaper_api.msg("Chord Progression Notebook is already running.")
+	return
+end
 
 local function new_state()
 	return {
@@ -41,6 +79,7 @@ end
 
 local state = new_state()
 local ctx = reaper.ImGui_CreateContext(WINDOW_TITLE)
+local is_shutdown = false
 
 local function load_seed_library()
 	local seed_path = script_path .. "data/library.json"
@@ -94,8 +133,12 @@ local function save_library_if_needed(force)
 		return
 	end
 	if force or state.dirty then
-		storage.save_library(state.library)
-		state.dirty = false
+		local ok = storage.save_library(state.library)
+		if ok then
+			state.dirty = false
+		else
+			reaper_api.msg("Failed to save library:\n" .. storage.get_library_path())
+		end
 	end
 end
 
@@ -206,6 +249,11 @@ local function handle_requests()
 end
 
 local function shutdown()
+	if is_shutdown then
+		return
+	end
+	is_shutdown = true
+
 	save_prefs()
 	save_library_if_needed(false)
 	midi_writer.stop_preview()
@@ -213,6 +261,15 @@ local function shutdown()
 	if reaper.ImGui_DestroyContext then
 		pcall(reaper.ImGui_DestroyContext, ctx)
 	end
+
+	release_instance_lock()
+end
+
+local function run_frame()
+	clamp_selection()
+	ui_main.draw(ctx, state)
+	handle_requests()
+	midi_writer.update_preview()
 end
 
 local function main()
@@ -221,10 +278,13 @@ local function main()
 		return
 	end
 
-	clamp_selection()
-	ui_main.draw(ctx, state)
-	handle_requests()
-	midi_writer.update_preview()
+	local ok, err = xpcall(run_frame, debug.traceback)
+	if not ok then
+		reaper_api.msg("Chord Progression Notebook crashed:\n\n" .. tostring(err))
+		state.ui_open = false
+		shutdown()
+		return
+	end
 
 	reaper.defer(main)
 end

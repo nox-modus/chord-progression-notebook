@@ -206,7 +206,7 @@ local function draw_suggestions(ctx, state)
 						chord[k] = v
 					end
 					state.dirty = true
-					midi_writer.preview_chord(chord, { duration = 0.40, velocity = 112, octave = 4 })
+					midi_writer.preview_click(chord)
 				end
 			end
 		end

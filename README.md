@@ -53,8 +53,12 @@ The main interface consists of:
 
 This project is currently hosted in a personal repository.
 
-The long-term goal is inclusion in the official ReaTeam ReaPack repository.  
-The script is already structured to meet ReaTeam technical conventions.
+The long-term goal is submission to the official ReaTeam ReaPack repository (after review).
+
+The repository layout follows ReaTeam/ReaPack conventions:
+
+- packaged under `Scripts/Nox-Modus/Chord Progression Notebook/`
+- entry script includes ReaPack metadata tags (`@description`, `@version`, `@provides`)
 
 ---
 
@@ -179,3 +183,20 @@ Note: these tests run in a plain Lua interpreter and do not require REAPER.
 - Any timeline edits are wrapped in undo blocks (MIDI insert paths).
 - No OS junk files are committed (remove `.DS_Store`).
 - No transient logs are committed (avoid committing `tests/logs/*`).
+
+## Acknowledgements
+Thanks to ChatGPT (OpenAI) for support in discussion, debugging, and iterative refinement during development.
+
+## Support
+This script is free and open-source (MIT License). See `LICENSE`.
+
+For bugs and feature requests, please use this repository's issue tracker (recommended), and include:
+
+- REAPER version + OS
+- ReaImGui version
+- a minimal reproduction (project state + steps)
+- any console output
+
+Support development (optional):
+
+☕ https://ko-fi.com/noxmodus

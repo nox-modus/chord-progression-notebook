@@ -146,7 +146,7 @@ No third-party binaries:
 
 This repository includes a local test routine for regression checks and support triage:
 
-- Run: `./scripts/run_tests.sh`
+- Run: `./tools/run_tests.sh`
 - Outputs:
   - `tests/logs/syntax_YYYYMMDD_HHMMSS.log` (syntax checks)
   - `tests/logs/run_YYYYMMDD_HHMMSS.log` (run transcript)
@@ -196,3 +196,5 @@ For bugs and feature requests, please use this repository's issue tracker (recom
 - ReaImGui version
 - a minimal reproduction (project state + steps)
 - any console output
+
+For optional ways to support development, see `SUPPORT.md`.

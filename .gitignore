@@ -1,0 +1,9 @@
+.DS_Store
+**/.DS_Store
+
+# Local test logs
+tests/logs/
+tests/tests/logs/
+
+# Local scratch/log folder
+logs/

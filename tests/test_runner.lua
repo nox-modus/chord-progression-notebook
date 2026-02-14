@@ -10,12 +10,6 @@ if root_dir:sub(-1) ~= "/" and root_dir:sub(-1) ~= "\\" then
 	root_dir = root_dir .. "/"
 end
 
-package.path = table.concat({
-	root_dir .. "?.lua",
-	root_dir .. "lib/?.lua",
-	package.path,
-}, ";")
-
 local SEP = package.config:sub(1, 1)
 
 local function path_join(a, b)
@@ -24,6 +18,16 @@ local function path_join(a, b)
 	end
 	return a .. SEP .. b
 end
+
+local root_clean = root_dir:gsub("[\\/]$", "")
+local package_dir = path_join(path_join(path_join(root_clean, "Scripts"), "Nox-Modus"), "Chord Progression Notebook")
+
+package.path = table.concat({
+	package_dir .. SEP .. "?.lua",
+	package_dir .. SEP .. "lib" .. SEP .. "?.lua",
+	package_dir .. SEP .. "lib" .. SEP .. "ui" .. SEP .. "?.lua",
+	package.path,
+}, ";")
 
 local function ensure_dir(path)
 	if SEP == "\\" then

@@ -196,7 +196,3 @@ For bugs and feature requests, please use this repository's issue tracker (recom
 - ReaImGui version
 - a minimal reproduction (project state + steps)
 - any console output
-
-Support development (optional):
-
-☕ https://ko-fi.com/noxmodus

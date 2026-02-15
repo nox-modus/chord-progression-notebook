@@ -1,31 +1,952 @@
 {
   "progressions": [
     {
-      "name": "I–V–vi–IV (Pop)",
+      "name": "I–V–vi–IV (Axis Pop)",
       "key_root": 0,
       "mode": "major",
       "tempo": 120,
-      "tags": ["pop", "classic"],
-      "notes": "Common pop progression in C major.",
+      "tags": [
+        "pop",
+        "axis",
+        "common"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/I%E2%80%93V%E2%80%93vi%E2%80%93IV_progression",
       "chords": [
-        {"root": 0, "quality": "major", "duration": 1},
-        {"root": 7, "quality": "major", "duration": 1},
-        {"root": 9, "quality": "minor", "duration": 1},
-        {"root": 5, "quality": "major", "duration": 1}
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        }
       ],
       "audio_refs": []
     },
     {
-      "name": "ii–V–I (Jazz)",
+      "name": "V–vi–IV–I (Axis Rotation)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 120,
+      "tags": [
+        "pop",
+        "axis",
+        "rotation"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/I%E2%80%93V%E2%80%93vi%E2%80%93IV_progression",
+      "chords": [
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "vi–IV–I–V (Axis Rotation)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 120,
+      "tags": [
+        "pop",
+        "axis",
+        "rotation"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/I%E2%80%93V%E2%80%93vi%E2%80%93IV_progression",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "IV–I–V–vi (Axis Rotation)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 120,
+      "tags": [
+        "pop",
+        "axis",
+        "rotation"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/I%E2%80%93V%E2%80%93vi%E2%80%93IV_progression",
+      "chords": [
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "I–vi–IV–V ('50s)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 116,
+      "tags": [
+        "doo-wop",
+        "50s",
+        "pop"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/%2750s_progression",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "I–IV–V (Primary Triads)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 118,
+      "tags": [
+        "folk",
+        "rock",
+        "foundational"
+      ],
+      "notes": "Common triadic basis also referenced by twelve-bar blues sources.",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 2
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "I–V–vi–iii–IV–I–IV–V (Pachelbel)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 104,
+      "tags": [
+        "classical",
+        "baroque",
+        "ostinato"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Pachelbel%27s_Canon",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "I–vi–ii–V (Turnaround)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 132,
+      "tags": [
+        "jazz",
+        "turnaround",
+        "standard"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Turnaround_(music)",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "iii–vi–ii–V (Turnaround Variant)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 132,
+      "tags": [
+        "jazz",
+        "turnaround"
+      ],
+      "notes": "Variant cited with rhythm changes context: https://en.wikipedia.org/wiki/Rhythm_changes",
+      "chords": [
+        {
+          "root": 4,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "ii–V–I (Jazz Cadence)",
       "key_root": 0,
       "mode": "major",
       "tempo": 140,
-      "tags": ["jazz"],
-      "notes": "Basic turnaround.",
+      "tags": [
+        "jazz",
+        "cadence",
+        "essential"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Ii%E2%80%93V%E2%80%93I_progression",
       "chords": [
-        {"root": 2, "quality": "minor7", "duration": 1},
-        {"root": 7, "quality": "dominant7", "duration": 1},
-        {"root": 0, "quality": "major7", "duration": 2}
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "iiø–V–i (Minor ii–V–i)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 130,
+      "tags": [
+        "jazz",
+        "minor",
+        "cadence"
+      ],
+      "notes": "Minor-key form from ii–V–I practice: https://en.wikipedia.org/wiki/Ii%E2%80%93V%E2%80%93I_progression",
+      "chords": [
+        {
+          "root": 11,
+          "quality": "halfdim7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "vi–ii–V–I (Circle Progression)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 128,
+      "tags": [
+        "jazz",
+        "circle-of-fifths"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Vi%E2%80%93ii%E2%80%93V%E2%80%93I",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "I–IV–vii°–iii–vi–ii–V–I (Full Circle)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 126,
+      "tags": [
+        "jazz",
+        "circle-of-fifths",
+        "extended"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Vi%E2%80%93ii%E2%80%93V%E2%80%93I",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 11,
+          "quality": "halfdim7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Rhythm Changes A (I–vi–ii–V x2)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 196,
+      "tags": [
+        "jazz",
+        "rhythm-changes",
+        "a-section"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Rhythm_changes",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Rhythm Changes Bridge (III7–VI7–II7–V7)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 196,
+      "tags": [
+        "jazz",
+        "rhythm-changes",
+        "bridge",
+        "dominant-chain"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Rhythm_changes",
+      "chords": [
+        {
+          "root": 4,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Ragtime Chain (III7–VI7–II7–V7–I)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 156,
+      "tags": [
+        "ragtime",
+        "secondary-dominants",
+        "turnaround"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Ragtime_progression",
+      "chords": [
+        {
+          "root": 4,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Royal Road (IVmaj7–V7–iii7–vi7)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 124,
+      "tags": [
+        "j-pop",
+        "royal-road",
+        "seventh-chords"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Royal_road_progression",
+      "chords": [
+        {
+          "root": 5,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Royal Road Extended (…ii7–V7–I)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 124,
+      "tags": [
+        "j-pop",
+        "royal-road",
+        "circle-of-fifths"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Royal_road_progression",
+      "chords": [
+        {
+          "root": 5,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Montgomery-Ward Bridge (I7–IV7–ii7–V7)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 168,
+      "tags": [
+        "jazz",
+        "bridge",
+        "standards"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Montgomery-Ward_bridge",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "12-Bar Blues (Basic)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 112,
+      "tags": [
+        "blues",
+        "12-bar",
+        "standard"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Twelve-bar_blues",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "12-Bar Blues (Quick Change)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 112,
+      "tags": [
+        "blues",
+        "12-bar",
+        "quick-change"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Twelve-bar_blues",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Blues Turnaround (V–IV–I–V)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 114,
+      "tags": [
+        "blues",
+        "turnaround",
+        "cadence"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/V%E2%80%93IV%E2%80%93I_turnaround",
+      "chords": [
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "i–VII–VI–V (Andalusian)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 108,
+      "tags": [
+        "minor",
+        "flamenco",
+        "andalusian",
+        "modal"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Andalusian_cadence",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        }
       ],
       "audio_refs": []
     },
@@ -34,13 +955,2190 @@
       "key_root": 9,
       "mode": "minor",
       "tempo": 90,
-      "tags": ["minor", "modal"],
-      "notes": "Aeolian feel in A minor.",
+      "tags": [
+        "minor",
+        "modal",
+        "aeolian"
+      ],
+      "notes": "Common Aeolian loop; aligns with natural minor harmony practice.",
       "chords": [
-        {"root": 9, "quality": "minor", "duration": 1},
-        {"root": 7, "quality": "major", "duration": 1},
-        {"root": 5, "quality": "major", "duration": 1},
-        {"root": 7, "quality": "major", "duration": 1}
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "i–VI–III–VII (Natural Minor Pop)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 98,
+      "tags": [
+        "minor",
+        "pop",
+        "aeolian"
+      ],
+      "notes": "Subset of the minor circle shown in vi–ii–V–I references.",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "i–iv–v (Natural Minor Cadential)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 94,
+      "tags": [
+        "minor",
+        "diatonic",
+        "cadence"
+      ],
+      "notes": "Natural minor diatonic triad cadence.",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "minor",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "i–iv–V–i (Harmonic Minor Cadence)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 96,
+      "tags": [
+        "minor",
+        "harmonic-minor",
+        "cadence"
+      ],
+      "notes": "Common minor-key practice with raised leading tone dominant.",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "iv–i (Minor Plagal)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 80,
+      "tags": [
+        "minor",
+        "plagal",
+        "cadence"
+      ],
+      "notes": "Common plagal resolution in minor contexts.",
+      "chords": [
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "i–iv–VII–III–VI–ii°–V–i (Minor Circle)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 122,
+      "tags": [
+        "minor",
+        "circle-of-fifths",
+        "extended"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Vi%E2%80%93ii%E2%80%93V%E2%80%93I",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 11,
+          "quality": "halfdim7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "I–V–IV–I (Classic Rock Cadence)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 122,
+      "tags": [
+        "rock",
+        "cadence",
+        "triads"
+      ],
+      "notes": "Simple cadential loop common in rock writing.",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "I–bVII–IV–I (Mixolydian Rock)",
+      "key_root": 0,
+      "mode": "mixolydian",
+      "tempo": 114,
+      "tags": [
+        "rock",
+        "mixolydian",
+        "modal"
+      ],
+      "notes": "Mixolydian modal loop.",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 10,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "bVII–IV–I (Double Plagal)",
+      "key_root": 0,
+      "mode": "mixolydian",
+      "tempo": 108,
+      "tags": [
+        "rock",
+        "plagal",
+        "backdoor"
+      ],
+      "notes": "Common rock/backdoor-style plagal motion.",
+      "chords": [
+        {
+          "root": 10,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "I–vi–ii–V–I (Anatole Major)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 136,
+      "tags": [
+        "jazz",
+        "anatole",
+        "turnaround"
+      ],
+      "notes": "Anatole/turnaround family; see I VI II V references in turnaround and rhythm changes sources.",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "VI7–II7–V7–I (Secondary Dominant Chain)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 146,
+      "tags": [
+        "jazz",
+        "secondary-dominants",
+        "turnaround"
+      ],
+      "notes": "Derived from ragtime/rhythm changes dominant-chain practice.",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "ii–V–I–vi (Turnaround Resolution)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 134,
+      "tags": [
+        "jazz",
+        "turnaround",
+        "cadence"
+      ],
+      "notes": "Variation often used in standards and song endings.",
+      "chords": [
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Romanesca (III–VII–i–V)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 108,
+      "tags": [
+        "renaissance",
+        "romanesca",
+        "ground-bass"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Romanesca",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Romanesca Extended (III–VII–i–V–III–VII–i–V–i)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 104,
+      "tags": [
+        "renaissance",
+        "romanesca",
+        "extended"
+      ],
+      "notes": "Source pattern quoted on Romanesca page: https://en.wikipedia.org/wiki/Romanesca",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Passamezzo Antico (i–bVII–i–V / III–bVII–i–V–i)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 100,
+      "tags": [
+        "renaissance",
+        "passamezzo",
+        "antico"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Passamezzo_antico",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Passamezzo Moderno (I–IV–I–V / I–IV–I–V–I)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 104,
+      "tags": [
+        "renaissance",
+        "passamezzo",
+        "moderno"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Passamezzo_moderno",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Lament Bass (Diatonic Tetrachord)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 64,
+      "tags": [
+        "baroque",
+        "lament",
+        "ground-bass"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Lament_bass",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Lament Bass (Chromatic Descent)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 58,
+      "tags": [
+        "baroque",
+        "lament",
+        "chromatic"
+      ],
+      "notes": "Source concept: chromatic fourth in lament bass: https://en.wikipedia.org/wiki/Lament_bass",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1,
+          "bass": 9
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1,
+          "bass": 8
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1,
+          "bass": 7
+        },
+        {
+          "root": 2,
+          "quality": "major",
+          "duration": 1,
+          "bass": 6
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1,
+          "bass": 5
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1,
+          "bass": 4
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Baroque Circle (I–IV–vii°–iii–vi–ii–V–I)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 116,
+      "tags": [
+        "baroque",
+        "circle-of-fifths",
+        "sequence"
+      ],
+      "notes": "Source: circle-of-fifths diatonic sequence: https://en.wikipedia.org/wiki/Circle_of_fifths",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 11,
+          "quality": "diminished",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Baroque Circle with Sevenths",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 120,
+      "tags": [
+        "baroque",
+        "circle-of-fifths",
+        "seventh-chords"
+      ],
+      "notes": "Source context: Baroque circle with added sevenths: https://en.wikipedia.org/wiki/Circle_of_fifths",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 11,
+          "quality": "halfdim7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach BWV 51 Circle (Am–Dm7–G7–Cmaj7–Fmaj7–Bø7–E7–Am)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 118,
+      "tags": [
+        "bach",
+        "baroque",
+        "circle-of-fifths"
+      ],
+      "notes": "Bach-specific circle-of-fifths mention on page: https://en.wikipedia.org/wiki/Circle_of_fifths",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 11,
+          "quality": "halfdim7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Passacaglia Ground (BWV 582 Style)",
+      "key_root": 0,
+      "mode": "minor",
+      "tempo": 56,
+      "tags": [
+        "bach",
+        "passacaglia",
+        "ground-bass"
+      ],
+      "notes": "Source context: ostinato-ground construction in BWV 582: https://en.wikipedia.org/wiki/Passacaglia_and_Fugue_in_C_minor%2C_BWV_582",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 10,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 8,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 3,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "diminished",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Passacaglia Variant (Sequential Tension)",
+      "key_root": 0,
+      "mode": "minor",
+      "tempo": 60,
+      "tags": [
+        "bach",
+        "passacaglia",
+        "variation"
+      ],
+      "notes": "Derived from BWV 582 ostinato-variation framework: https://en.wikipedia.org/wiki/Passacaglia_and_Fugue_in_C_minor%2C_BWV_582",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 10,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 8,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 3,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "halfdim7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chaconne Opening Variant (i–i7–VI–iv–V)",
+      "key_root": 2,
+      "mode": "minor",
+      "tempo": 70,
+      "tags": [
+        "bach",
+        "chaconne",
+        "violin-partita"
+      ],
+      "notes": "Source context: Bach Chaconne links to Andalusian-type opening variant: https://en.wikipedia.org/wiki/Andalusian_cadence",
+      "chords": [
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 10,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chaconne Ground Loop (Descending Tetrachord)",
+      "key_root": 2,
+      "mode": "minor",
+      "tempo": 72,
+      "tags": [
+        "bach",
+        "chaconne",
+        "ground-bass"
+      ],
+      "notes": "Source concept: chaconne as repeated harmonic/ground-bass progression: https://en.wikipedia.org/wiki/Chaconne",
+      "chords": [
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 10,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Deceptive Cadence (V–VI in Minor)",
+      "key_root": 5,
+      "mode": "minor",
+      "tempo": 66,
+      "tags": [
+        "bach",
+        "cadence",
+        "deceptive"
+      ],
+      "notes": "Source: Bach Prelude in F minor deceptive cadence example (V–VI): https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 1,
+          "quality": "major",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Phrygian Half Cadence (iv6–V)",
+      "key_root": 4,
+      "mode": "minor",
+      "tempo": 58,
+      "tags": [
+        "bach",
+        "baroque",
+        "phrygian-cadence"
+      ],
+      "notes": "Source definition and baroque context: https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1,
+          "bass": 0
+        },
+        {
+          "root": 11,
+          "quality": "major",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Authentic Cadence (V7–i)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 72,
+      "tags": [
+        "bach",
+        "cadence",
+        "authentic"
+      ],
+      "notes": "Source cadence classification: https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 4,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Plagal Close (IV–I)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 70,
+      "tags": [
+        "bach",
+        "chorale",
+        "cadence",
+        "plagal"
+      ],
+      "notes": "Source cadence classification: https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Cadential Core (ii–V–I)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 122,
+      "tags": [
+        "cadence",
+        "functional",
+        "common-practice"
+      ],
+      "notes": "Source: cadence/authentic function overview: https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Cadential Core (iv6–V–i)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 86,
+      "tags": [
+        "cadence",
+        "phrygian",
+        "minor"
+      ],
+      "notes": "Source: Phrygian half cadence iv6-V in minor: https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1,
+          "bass": 5
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Cadential Core (V–vi Deceptive)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 96,
+      "tags": [
+        "cadence",
+        "deceptive",
+        "common-practice"
+      ],
+      "notes": "Source: deceptive cadence category: https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Descending Fifths Sequence (Diatonic 7-Chord)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 124,
+      "tags": [
+        "sequence",
+        "descending-fifths",
+        "diatonic"
+      ],
+      "notes": "Source concept: descending fifths sequence: https://en.wikipedia.org/wiki/Sequence_(music)",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 11,
+          "quality": "diminished",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Descending Fifths Sequence (Minor 7-Chord)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 118,
+      "tags": [
+        "sequence",
+        "descending-fifths",
+        "minor"
+      ],
+      "notes": "Source concept: descending fifths sequence: https://en.wikipedia.org/wiki/Sequence_(music)",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 11,
+          "quality": "diminished",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bird Changes (12-Bar Jazz Blues)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 184,
+      "tags": [
+        "jazz",
+        "bird-changes",
+        "blues"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Bird_changes",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 11,
+          "quality": "halfdim7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 10,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 3,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Coltrane Changes (Giant Steps Core)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 260,
+      "tags": [
+        "jazz",
+        "coltrane",
+        "advanced"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Coltrane_changes",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 11,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Coltrane Substitution (ii-V-I Expanded)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 220,
+      "tags": [
+        "jazz",
+        "coltrane",
+        "substitution"
+      ],
+      "notes": "Source substitution formula: https://en.wikipedia.org/wiki/Coltrane_changes",
+      "chords": [
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 11,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Tadd Dameron Turnaround (I–III7–VI7–II7)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 168,
+      "tags": [
+        "jazz",
+        "turnaround",
+        "dameron"
+      ],
+      "notes": "Source: https://en.wikipedia.org/wiki/Tadd_Dameron_turnaround",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Turnaround (I–VI–II–V)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 138,
+      "tags": [
+        "jazz",
+        "turnaround",
+        "secondary-dominants"
+      ],
+      "notes": "Source list: https://en.wikipedia.org/wiki/Turnaround_(music)",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Turnaround (I–iii–ii7–V7)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 134,
+      "tags": [
+        "jazz",
+        "turnaround",
+        "diatonic"
+      ],
+      "notes": "Source list: https://en.wikipedia.org/wiki/Turnaround_(music)",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Turnaround (iii–VI–ii–V)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 136,
+      "tags": [
+        "jazz",
+        "turnaround",
+        "cycle"
+      ],
+      "notes": "Source list: https://en.wikipedia.org/wiki/Turnaround_(music)",
+      "chords": [
+        {
+          "root": 4,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Chaconne Ground (Minor Ostinato)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 76,
+      "tags": [
+        "baroque",
+        "chaconne",
+        "ostinato"
+      ],
+      "notes": "Source concept: chaconne built on repeated short progression/ground: https://en.wikipedia.org/wiki/Chaconne",
+      "chords": [
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chorale Template: ii6–V–I (PAC)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 72,
+      "tags": [
+        "bach-chorale",
+        "cadence",
+        "authentic",
+        "template"
+      ],
+      "notes": "Cadence type in common-practice style used in Bach chorales corpus (BWV chorale lists): https://en.wikipedia.org/wiki/Cadence ; https://en.wikipedia.org/wiki/List_of_chorale_harmonisations_by_Johann_Sebastian_Bach",
+      "chords": [
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1,
+          "bass": 5
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chorale Template: I6/4–V–I",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 70,
+      "tags": [
+        "bach-chorale",
+        "cadence",
+        "authentic",
+        "template"
+      ],
+      "notes": "Cadential dominant approach in chorale-style phrase endings; Bach has extensive 4-part chorale output: https://en.wikipedia.org/wiki/List_of_chorale_harmonisations_by_Johann_Sebastian_Bach",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1,
+          "bass": 7
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chorale Template: I–ii6–V (Half Cadence)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 74,
+      "tags": [
+        "bach-chorale",
+        "cadence",
+        "half",
+        "template"
+      ],
+      "notes": "Half-cadence class in tonal syntax, commonly used at internal phrase boundaries: https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1,
+          "bass": 5
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chorale Template: I–ii6–V–vi (Deceptive)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 72,
+      "tags": [
+        "bach-chorale",
+        "cadence",
+        "deceptive",
+        "template"
+      ],
+      "notes": "Deceptive cadence (V to vi / VI), with Bach mention in cadence entry (Wachet auf example): https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1,
+          "bass": 5
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chorale Template: IV–I (Plagal)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 68,
+      "tags": [
+        "bach-chorale",
+        "cadence",
+        "plagal",
+        "template"
+      ],
+      "notes": "Plagal cadence class within common-practice cadence taxonomy: https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chorale Template: IV–I6/4–V–I",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 70,
+      "tags": [
+        "bach-chorale",
+        "cadence",
+        "hybrid",
+        "template"
+      ],
+      "notes": "Plagal-to-authentic compound close in chorale-style phrase design (Bach chorale corpus context): https://en.wikipedia.org/wiki/List_of_chorale_harmonisations_by_Johann_Sebastian_Bach",
+      "chords": [
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1,
+          "bass": 7
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chorale Template: iv–V–i (Minor Authentic)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 66,
+      "tags": [
+        "bach-chorale",
+        "cadence",
+        "minor",
+        "authentic",
+        "template"
+      ],
+      "notes": "Minor-mode authentic cadence class in common-practice harmony: https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chorale Template: iv6–V–i (Phrygian)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 62,
+      "tags": [
+        "bach-chorale",
+        "cadence",
+        "phrygian",
+        "template"
+      ],
+      "notes": "Phrygian half cadence definition and usage in tonal practice: https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1,
+          "bass": 5
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chorale Template: iv–V–I (Picardy Close)",
+      "key_root": 9,
+      "mode": "minor",
+      "tempo": 64,
+      "tags": [
+        "bach-chorale",
+        "cadence",
+        "picardy",
+        "template"
+      ],
+      "notes": "Picardy-third close often found in Bach minor chorales: https://en.wikipedia.org/wiki/Picardy_third",
+      "chords": [
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "major",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chorale Template: I–vi–ii–V–I (Phrase Loop)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 76,
+      "tags": [
+        "bach-chorale",
+        "phrase",
+        "circle",
+        "template"
+      ],
+      "notes": "Descending-fifths phrase archetype tied to circle-of-fifths syntax in Baroque writing: https://en.wikipedia.org/wiki/Circle_of_fifths",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chorale Template: I–vii°6–I6–V–I",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 72,
+      "tags": [
+        "bach-chorale",
+        "voice-leading",
+        "passing",
+        "template"
+      ],
+      "notes": "Chorale-style passing diminished sonority in functional phrase-leading; 4-part chorale corpus context: https://en.wikipedia.org/wiki/List_of_chorale_harmonisations_by_Johann_Sebastian_Bach",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 11,
+          "quality": "diminished",
+          "duration": 1,
+          "bass": 2
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1,
+          "bass": 4
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chorale Template: I–IV–V7–I",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 78,
+      "tags": [
+        "bach-chorale",
+        "cadence",
+        "dominant7",
+        "template"
+      ],
+      "notes": "Simple chorale-compatible phrase ending with dominant seventh and authentic close: https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 2
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Bach Chorale Template: V–vi / V–I Pair",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 72,
+      "tags": [
+        "bach-chorale",
+        "cadence",
+        "deceptive",
+        "authentic",
+        "template"
+      ],
+      "notes": "Based on cadence-entry discussion of deceptive-to-authentic phrase parallel in Bach chorale setting (Wachet auf): https://en.wikipedia.org/wiki/Cadence",
+      "chords": [
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "minor",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major",
+          "duration": 2
+        }
       ],
       "audio_refs": []
     }

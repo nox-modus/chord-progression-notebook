@@ -96,13 +96,70 @@ local function load_seed_library()
 	return { progressions = {} }
 end
 
+local function chord_signature(chord)
+	if type(chord) ~= "table" then
+		return "?"
+	end
+
+	local root = tostring(chord.root or "")
+	local quality = tostring(chord.quality or "")
+	local duration = tostring(chord.duration or "")
+	local extensions = tostring(chord.extensions or "")
+	local bass = tostring(chord.bass or "")
+	return table.concat({ root, quality, duration, extensions, bass }, ":")
+end
+
+local function progression_signature(prog)
+	if type(prog) ~= "table" then
+		return "?"
+	end
+
+	local parts = {
+		tostring(prog.name or ""),
+		tostring(prog.key_root or ""),
+		tostring(prog.mode or ""),
+	}
+	local chords = type(prog.chords) == "table" and prog.chords or {}
+	for _, chord in ipairs(chords) do
+		parts[#parts + 1] = chord_signature(chord)
+	end
+	return table.concat(parts, "|")
+end
+
+local function merge_seed_progressions(library, seed)
+	local list = library.progressions or {}
+	local seed_list = (type(seed) == "table" and seed.progressions) or {}
+	if type(seed_list) ~= "table" or #seed_list == 0 then
+		return false
+	end
+
+	local existing = {}
+	for _, prog in ipairs(list) do
+		existing[progression_signature(prog)] = true
+	end
+
+	local changed = false
+	for _, prog in ipairs(seed_list) do
+		local sig = progression_signature(prog)
+		if not existing[sig] then
+			list[#list + 1] = prog
+			existing[sig] = true
+			changed = true
+		end
+	end
+
+	library.progressions = list
+	return changed
+end
+
 local function normalize_library(library)
 	library = type(library) == "table" and library or {}
 	library.progressions = type(library.progressions) == "table" and library.progressions or {}
 
+	local merged_seed = merge_seed_progressions(library, load_seed_library())
 	if #library.progressions == 0 then
-		local seed = load_seed_library()
-		library.progressions = seed.progressions or {}
+		library.progressions = load_seed_library().progressions or {}
+		merged_seed = #library.progressions > 0
 	end
 
 	if #library.progressions == 0 then
@@ -120,12 +177,16 @@ local function normalize_library(library)
 		}
 	end
 
-	return library
+	return library, merged_seed
 end
 
 local function load_library()
 	local loaded = storage.load_library()
-	return normalize_library(loaded)
+	local library, merged_seed = normalize_library(loaded)
+	if merged_seed and loaded then
+		state.dirty = true
+	end
+	return library
 end
 
 local function save_library_if_needed(force)

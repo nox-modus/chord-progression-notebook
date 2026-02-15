@@ -223,6 +223,10 @@ local function draw_menu(ctx, state)
 		state.save_requested = true
 	end
 
+	if reaper.ImGui_MenuItem(ctx, "Import Library From Project...") then
+		ui_library.import_from_project(state)
+	end
+
 	if reaper.ImGui_MenuItem(ctx, "Quit") then
 		state.ui_open = false
 	end

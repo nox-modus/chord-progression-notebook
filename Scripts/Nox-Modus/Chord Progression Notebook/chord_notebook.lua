@@ -67,6 +67,7 @@ local function new_state()
 		show_roman = false,
 		reharm_mode = "diatonic_rotate",
 		grain_enabled = false,
+		tag_search = "",
 		ui_open = true,
 		dirty = false,
 
@@ -94,6 +95,18 @@ local function load_seed_library()
 	end
 
 	return { progressions = {} }
+end
+
+local function deep_copy(value)
+	if type(value) ~= "table" then
+		return value
+	end
+
+	local out = {}
+	for k, v in pairs(value) do
+		out[k] = deep_copy(v)
+	end
+	return out
 end
 
 local function chord_signature(chord)
@@ -126,6 +139,50 @@ local function progression_signature(prog)
 	return table.concat(parts, "|")
 end
 
+local function reference_id_for_progression(prog)
+	return progression_signature(prog)
+end
+
+local function ensure_reference_links(library, seed)
+	local changed = false
+	local seed_list = (type(seed) == "table" and seed.progressions) or {}
+	if type(seed_list) ~= "table" then
+		return false
+	end
+
+	local seed_ref_ids = {}
+	local seed_name_refs = {}
+	for _, seed_prog in ipairs(seed_list) do
+		local ref_id = reference_id_for_progression(seed_prog)
+		seed_ref_ids[ref_id] = true
+		local name = tostring(seed_prog.name or "")
+		seed_name_refs[name] = seed_name_refs[name] or {}
+		seed_name_refs[name][#seed_name_refs[name] + 1] = ref_id
+	end
+
+	local list = library.progressions or {}
+	for _, prog in ipairs(list) do
+		local current_ref = type(prog.ref_id) == "string" and prog.ref_id or nil
+		if current_ref and seed_ref_ids[current_ref] then
+			-- Already linked to known immutable reference.
+		else
+			local ref_by_signature = reference_id_for_progression(prog)
+			if seed_ref_ids[ref_by_signature] then
+				prog.ref_id = ref_by_signature
+				changed = true
+			else
+				local name_matches = seed_name_refs[tostring(prog.name or "")]
+				if name_matches and #name_matches == 1 then
+					prog.ref_id = name_matches[1]
+					changed = true
+				end
+			end
+		end
+	end
+
+	return changed
+end
+
 local function merge_seed_progressions(library, seed)
 	local list = library.progressions or {}
 	local seed_list = (type(seed) == "table" and seed.progressions) or {}
@@ -134,16 +191,24 @@ local function merge_seed_progressions(library, seed)
 	end
 
 	local existing = {}
+	local existing_ref_ids = {}
 	for _, prog in ipairs(list) do
 		existing[progression_signature(prog)] = true
+		if type(prog.ref_id) == "string" and prog.ref_id ~= "" then
+			existing_ref_ids[prog.ref_id] = true
+		end
 	end
 
 	local changed = false
 	for _, prog in ipairs(seed_list) do
 		local sig = progression_signature(prog)
-		if not existing[sig] then
-			list[#list + 1] = prog
+		local ref_id = reference_id_for_progression(prog)
+		if not existing[sig] and not existing_ref_ids[ref_id] then
+			local copy = deep_copy(prog)
+			copy.ref_id = ref_id
+			list[#list + 1] = copy
 			existing[sig] = true
+			existing_ref_ids[ref_id] = true
 			changed = true
 		end
 	end
@@ -156,9 +221,14 @@ local function normalize_library(library)
 	library = type(library) == "table" and library or {}
 	library.progressions = type(library.progressions) == "table" and library.progressions or {}
 
-	local merged_seed = merge_seed_progressions(library, load_seed_library())
+	local seed = load_seed_library()
+	local linked_seed = ensure_reference_links(library, seed)
+	local merged_seed = merge_seed_progressions(library, seed)
 	if #library.progressions == 0 then
-		library.progressions = load_seed_library().progressions or {}
+		library.progressions = deep_copy(seed.progressions or {})
+		for _, prog in ipairs(library.progressions) do
+			prog.ref_id = reference_id_for_progression(prog)
+		end
 		merged_seed = #library.progressions > 0
 	end
 
@@ -177,7 +247,7 @@ local function normalize_library(library)
 		}
 	end
 
-	return library, merged_seed
+	return library, (merged_seed or linked_seed)
 end
 
 local function load_library()
@@ -212,6 +282,7 @@ local function load_prefs()
 	state.show_roman = prefs.show_roman == true
 	state.reharm_mode = prefs.reharm_mode or state.reharm_mode
 	state.grain_enabled = prefs.grain_enabled == true
+	state.tag_search = tostring(prefs.tag_search or "")
 end
 
 local function save_prefs()
@@ -219,6 +290,7 @@ local function save_prefs()
 		show_roman = state.show_roman,
 		reharm_mode = state.reharm_mode,
 		grain_enabled = state.grain_enabled,
+		tag_search = state.tag_search,
 	})
 end
 
@@ -351,5 +423,6 @@ local function main()
 end
 
 state.library = load_library()
+state.reference_library = load_seed_library()
 load_prefs()
 reaper.defer(main)

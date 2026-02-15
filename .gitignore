@@ -7,3 +7,6 @@ tests/tests/logs/
 
 # Local scratch/log folder
 logs/
+
+# Local snapshot notes
+PROJECT_STATE.md

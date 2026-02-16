@@ -90,7 +90,7 @@ The script is single-instance guarded.
 
 You can import this repository directly in ReaPack using:
 
-`https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/index.xml`
+`https://raw.githubusercontent.com/nox-modus/nox-chords-notebook/main/index.xml`
 
 In REAPER:
 1. `Extensions -> ReaPack -> Import repositories...`

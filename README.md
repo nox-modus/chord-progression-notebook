@@ -49,6 +49,32 @@ The main interface consists of:
 
 ---
 
+### Progressions Library
+
+<p align="center">
+  <img src="images/library.png" width="42%" alt="Progressions Library panel">
+</p>
+
+The Progressions Library is split into two coordinated areas:
+
+- **Reference Library (Read-Only)**  
+  Curated immutable progression source (seeded from `data/library.json`).
+- **Project Library (Editable)**  
+  Local, project-specific working set for arranging and reharmonization.
+
+Key operations:
+
+- `Add To Project` / `Duplicate To Project`
+- `Import From Project` (merge mode)
+- `Restore From Reference` (right-click project row)
+- Tag search + provenance filter
+- Playback controls for selected progression (`Play Selected`, `Stop`, `Loop`)
+
+Image note:
+- Place your screenshot at `images/library.png` to populate this section.
+
+---
+
 ## Current Status
 
 This project is currently hosted in a personal repository.

@@ -16,8 +16,8 @@
 
 ## 3. Reference to Project Workflow
 1. In `Reference Library (Read-Only)`, select a progression.
-2. Click `Add To Project` to add one copy (dedupe-aware).
-3. Click `Duplicate To Project` to force a new project copy.
+2. Click `Add To Project` to create a new copy in `Project Library`.
+3. Repeat `Add To Project` if you want multiple copies.
 4. Edit only in `Project Library`.
 
 ## 4. Basic Project Editing

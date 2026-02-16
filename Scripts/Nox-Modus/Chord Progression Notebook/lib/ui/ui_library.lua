@@ -760,14 +760,6 @@ function ui_library.draw(ctx, state)
 	reaper.ImGui_Text(ctx, "Reference Library (Read-Only)")
 
 	if reaper.ImGui_Button(ctx, "Add To Project") then
-		local ok, message = add_reference_to_project(state, state.selected_reference_progression, false)
-		if (not ok) and message and message ~= "" then
-			reaper.ShowMessageBox(message, "Chord Progression Notebook", 0)
-		end
-	end
-
-	reaper.ImGui_SameLine(ctx)
-	if reaper.ImGui_Button(ctx, "Duplicate To Project") then
 		local ok, message = add_reference_to_project(state, state.selected_reference_progression, true)
 		if (not ok) and message and message ~= "" then
 			reaper.ShowMessageBox(message, "Chord Progression Notebook", 0)

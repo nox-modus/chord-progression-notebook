@@ -64,7 +64,7 @@ The Progressions Library is split into two coordinated areas:
 
 Key operations:
 
-- `Add To Project` / `Duplicate To Project`
+- `Add To Project` (always creates a new project copy)
 - `Import From Project` (merge mode)
 - `Restore From Reference` (right-click project row)
 - Tag search + provenance filter
@@ -249,7 +249,7 @@ For optional ways to support development, see `SUPPORT.md`.
 
 ### v0.7.x to v0.8.x
 - Added reference (read-only) + project (editable) split library workflow.
-- Added `Add To Project`, `Duplicate To Project`, and `Restore From Reference`.
+- Added `Add To Project` and `Restore From Reference`.
 - Added `Import Library From Project` merge workflow (no destructive overwrite).
 - Added tag filtering and provenance filtering for library browsing.
 - Added path visibility helper (`Show Library Path`) to reduce storage confusion.

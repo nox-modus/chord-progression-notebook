@@ -86,6 +86,17 @@ If ReaImGui is not installed, the script displays a clear message and exits safe
 
 The script is single-instance guarded.
 
+## Installation (ReaPack Repository URL)
+
+You can import this repository directly in ReaPack using:
+
+`https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/index.xml`
+
+In REAPER:
+1. `Extensions -> ReaPack -> Import repositories...`
+2. Paste the URL above.
+3. Browse/sync packages and install `Nox-Modus/Chord Progression Notebook`.
+
 ---
 
 ## Features

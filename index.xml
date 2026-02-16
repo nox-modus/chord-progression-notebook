@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index version="1" name="Nox-Modus ReaScripts">
+  <category name="Scripts">
+    <reapack name="Nox-Modus/Chord Progression Notebook" type="script">
+      <metadata>
+        <description>Chord Progression Notebook for REAPER (ReaImGui)</description>
+        <link rel="website">https://github.com/nox-modus/chord-progression-notebook</link>
+      </metadata>
+      <version name="0.9.0" author="Nox-Modus" time="2026-02-16T12:00:00Z">
+        <source main="main" file="Scripts/Nox-Modus/Chord Progression Notebook/chord_notebook.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/chord_notebook.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/chord_model.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/chord_model.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/harmony_engine.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/harmony_engine.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/json.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/json.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/library_safety.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/library_safety.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/midi_writer.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/midi_writer.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/reaper_api.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/reaper_api.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/storage.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/storage.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/undo.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/undo.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_circle_of_fifths.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_circle_of_fifths.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_circle_widget.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_circle_widget.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_inspector.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_inspector.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_layout.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_layout.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_library.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_library.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_main.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_main.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_progression_lane.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_progression_lane.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_sections.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_sections.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_theme.lua" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_theme.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/data/library.json" type="script">https://raw.githubusercontent.com/nox-modus/chord-progression-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/data/library.json</source>
+      </version>
+    </reapack>
+  </category>
+  <metadata>
+    <description>Nox-Modus ReaScript repository</description>
+    <link rel="website">https://github.com/nox-modus/chord-progression-notebook</link>
+  </metadata>
+</index>

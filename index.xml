@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <index version="1" name="Nox-Modus ReaScripts">
-  <category name="Scripts">
-    <reapack name="Nox-Modus/Chord Progression Notebook" type="script">
+  <category name="Nox-Modus">
+    <reapack name="Chord Progression Notebook" type="script">
       <metadata>
         <description>Chord Progression Notebook for REAPER (ReaImGui)</description>
         <link rel="website">https://github.com/nox-modus/chord-progression-notebook</link>

@@ -33,7 +33,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "V–vi–IV–I (Axis Rotation)",
@@ -68,7 +72,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "vi–IV–I–V (Axis Rotation)",
@@ -103,7 +111,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "IV–I–V–vi (Axis Rotation)",
@@ -138,7 +150,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "I–vi–IV–V ('50s)",
@@ -173,7 +189,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "I–IV–V (Primary Triads)",
@@ -203,7 +223,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "I–V–vi–iii–IV–I–IV–V (Pachelbel)",
@@ -258,7 +282,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "I–vi–ii–V (Turnaround)",
@@ -293,7 +321,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "iii–vi–ii–V (Turnaround Variant)",
@@ -327,7 +359,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "ii–V–I (Jazz Cadence)",
@@ -357,7 +393,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "iiø–V–i (Minor ii–V–i)",
@@ -387,7 +427,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "vi–ii–V–I (Circle Progression)",
@@ -421,7 +465,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "I–IV–vii°–iii–vi–ii–V–I (Full Circle)",
@@ -476,7 +524,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Rhythm Changes A (I–vi–ii–V x2)",
@@ -531,7 +583,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Rhythm Changes Bridge (III7–VI7–II7–V7)",
@@ -567,7 +623,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Ragtime Chain (III7–VI7–II7–V7–I)",
@@ -607,7 +667,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Royal Road (IVmaj7–V7–iii7–vi7)",
@@ -642,7 +706,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Royal Road Extended (…ii7–V7–I)",
@@ -692,7 +760,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Montgomery-Ward Bridge (I7–IV7–ii7–V7)",
@@ -727,7 +799,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "12-Bar Blues (Basic)",
@@ -802,7 +878,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "12-Bar Blues (Quick Change)",
@@ -877,7 +957,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Blues Turnaround (V–IV–I–V)",
@@ -912,7 +996,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "i–VII–VI–V (Andalusian)",
@@ -948,7 +1036,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "i–VII–VI–VII (Aeolian)",
@@ -983,7 +1075,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "i–VI–III–VII (Natural Minor Pop)",
@@ -1018,7 +1114,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "i–iv–v (Natural Minor Cadential)",
@@ -1048,7 +1148,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "i–iv–V–i (Harmonic Minor Cadence)",
@@ -1083,7 +1187,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "iv–i (Minor Plagal)",
@@ -1108,7 +1216,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "i–iv–VII–III–VI–ii°–V–i (Minor Circle)",
@@ -1163,7 +1275,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "I–V–IV–I (Classic Rock Cadence)",
@@ -1198,7 +1314,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "I–bVII–IV–I (Mixolydian Rock)",
@@ -1233,7 +1353,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "bVII–IV–I (Double Plagal)",
@@ -1263,7 +1387,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "I–vi–ii–V–I (Anatole Major)",
@@ -1303,7 +1431,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "VI7–II7–V7–I (Secondary Dominant Chain)",
@@ -1338,7 +1470,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "ii–V–I–vi (Turnaround Resolution)",
@@ -1373,7 +1509,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Romanesca (III–VII–i–V)",
@@ -1408,7 +1548,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Romanesca Extended (III–VII–i–V–III–VII–i–V–i)",
@@ -1468,7 +1612,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Passamezzo Antico (i–bVII–i–V / III–bVII–i–V–i)",
@@ -1528,7 +1676,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Passamezzo Moderno (I–IV–I–V / I–IV–I–V–I)",
@@ -1588,7 +1740,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Lament Bass (Diatonic Tetrachord)",
@@ -1623,7 +1779,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Lament Bass (Chromatic Descent)",
@@ -1674,7 +1834,11 @@
           "bass": 4
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Baroque Circle (I–IV–vii°–iii–vi–ii–V–I)",
@@ -1729,7 +1893,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Baroque Circle with Sevenths",
@@ -1784,7 +1952,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach BWV 51 Circle (Am–Dm7–G7–Cmaj7–Fmaj7–Bø7–E7–Am)",
@@ -1796,7 +1968,7 @@
         "baroque",
         "circle-of-fifths"
       ],
-      "notes": "Bach-specific circle-of-fifths mention on page: https://en.wikipedia.org/wiki/Circle_of_fifths",
+      "notes": "Source exact sequence mention: https://en.wikipedia.org/wiki/Circle_of_fifths",
       "chords": [
         {
           "root": 9,
@@ -1839,7 +2011,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_exact",
+        "confidence": "high"
+      }
     },
     {
       "name": "Bach Passacaglia Ground (BWV 582 Style)",
@@ -1894,7 +2070,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Passacaglia Variant (Sequential Tension)",
@@ -1949,7 +2129,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chaconne Opening Variant (i–i7–VI–iv–V)",
@@ -1989,7 +2173,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chaconne Ground Loop (Descending Tetrachord)",
@@ -2024,7 +2212,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Deceptive Cadence (V–VI in Minor)",
@@ -2049,7 +2241,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Phrygian Half Cadence (iv6–V)",
@@ -2075,7 +2271,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Authentic Cadence (V7–i)",
@@ -2100,7 +2300,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Plagal Close (IV–I)",
@@ -2126,7 +2330,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Cadential Core (ii–V–I)",
@@ -2156,7 +2364,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Cadential Core (iv6–V–i)",
@@ -2187,7 +2399,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Cadential Core (V–vi Deceptive)",
@@ -2212,7 +2428,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Descending Fifths Sequence (Diatonic 7-Chord)",
@@ -2262,7 +2482,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Descending Fifths Sequence (Minor 7-Chord)",
@@ -2312,7 +2536,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bird Changes (12-Bar Jazz Blues)",
@@ -2417,7 +2645,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Coltrane Changes (Giant Steps Core)",
@@ -2467,7 +2699,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_based",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Coltrane Substitution (ii-V-I Expanded)",
@@ -2517,7 +2753,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Tadd Dameron Turnaround (I–III7–VI7–II7)",
@@ -2529,7 +2769,7 @@
         "turnaround",
         "dameron"
       ],
-      "notes": "Source: https://en.wikipedia.org/wiki/Tadd_Dameron_turnaround",
+      "notes": "Source exact formula: https://en.wikipedia.org/wiki/Tadd_Dameron_turnaround",
       "chords": [
         {
           "root": 0,
@@ -2552,7 +2792,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "source_exact",
+        "confidence": "high"
+      }
     },
     {
       "name": "Turnaround (I–VI–II–V)",
@@ -2587,7 +2831,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Turnaround (I–iii–ii7–V7)",
@@ -2622,7 +2870,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Turnaround (iii–VI–ii–V)",
@@ -2657,7 +2909,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Chaconne Ground (Minor Ostinato)",
@@ -2692,7 +2948,11 @@
           "duration": 1
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chorale Template: ii6–V–I (PAC)",
@@ -2724,7 +2984,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chorale Template: I6/4–V–I",
@@ -2756,7 +3020,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chorale Template: I–ii6–V (Half Cadence)",
@@ -2788,7 +3056,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chorale Template: I–ii6–V–vi (Deceptive)",
@@ -2825,7 +3097,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chorale Template: IV–I (Plagal)",
@@ -2851,7 +3127,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chorale Template: IV–I6/4–V–I",
@@ -2888,7 +3168,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chorale Template: iv–V–i (Minor Authentic)",
@@ -2920,7 +3204,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chorale Template: iv6–V–i (Phrygian)",
@@ -2952,7 +3240,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chorale Template: iv–V–I (Picardy Close)",
@@ -2983,7 +3275,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chorale Template: I–vi–ii–V–I (Phrase Loop)",
@@ -3024,7 +3320,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chorale Template: I–vii°6–I6–V–I",
@@ -3067,7 +3367,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chorale Template: I–IV–V7–I",
@@ -3103,7 +3407,11 @@
           "duration": 2
         }
       ],
-      "audio_refs": []
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
     },
     {
       "name": "Bach Chorale Template: V–vi / V–I Pair",
@@ -3138,6 +3446,155 @@
           "root": 0,
           "quality": "major",
           "duration": 2
+        }
+      ],
+      "audio_refs": [],
+      "provenance": {
+        "type": "derived_template",
+        "confidence": "medium"
+      }
+    },
+    {
+      "name": "Coltrane Substitution (Standard in C)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 220,
+      "tags": [
+        "jazz",
+        "coltrane",
+        "substitution",
+        "source-audited"
+      ],
+      "notes": "Source exact substitution (ii-V-I in C): https://en.wikipedia.org/wiki/Coltrane_changes",
+      "provenance": {
+        "type": "source_exact",
+        "confidence": "high"
+      },
+      "chords": [
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 11,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
+        }
+      ],
+      "audio_refs": []
+    },
+    {
+      "name": "Countdown Reharmonization (Tune Up Excerpt)",
+      "key_root": 0,
+      "mode": "major",
+      "tempo": 260,
+      "tags": [
+        "jazz",
+        "coltrane",
+        "countdown",
+        "source-audited"
+      ],
+      "notes": "Source exact excerpt progression: https://en.wikipedia.org/wiki/Coltrane_changes",
+      "provenance": {
+        "type": "source_exact",
+        "confidence": "high"
+      },
+      "chords": [
+        {
+          "root": 4,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 5,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 10,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 2,
+          "quality": "minor7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 9,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 11,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 4,
+          "quality": "major7",
+          "duration": 1
+        },
+        {
+          "root": 7,
+          "quality": "dominant7",
+          "duration": 1
+        },
+        {
+          "root": 0,
+          "quality": "major7",
+          "duration": 1
         }
       ],
       "audio_refs": []

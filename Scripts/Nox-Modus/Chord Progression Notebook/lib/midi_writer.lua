@@ -8,6 +8,21 @@ local PREVIEW_CLICK_OPTS = {
 	octave = 4,
 }
 
+local function sort_numeric(list)
+	table.sort(list, function(a, b)
+		return a < b
+	end)
+	return list
+end
+
+local function copy_list(list)
+	local out = {}
+	for i, v in ipairs(list or {}) do
+		out[i] = v
+	end
+	return out
+end
+
 local function clamp7(v)
 	v = math.floor(tonumber(v) or 0)
 	if v < 0 then
@@ -75,12 +90,12 @@ local function qn_length_to_time_span(start_time, qn_length)
 	return end_time - start_time
 end
 
-local function insert_chord_notes(take, chord, start_time, end_time)
+local function insert_chord_notes(take, chord, start_time, end_time, pitches)
 	local ppq_start = reaper.MIDI_GetPPQPosFromProjTime(take, start_time)
 	local ppq_end = reaper.MIDI_GetPPQPosFromProjTime(take, end_time)
-	local pitches = chord_model.chord_pitches(chord, 4)
+	local out_pitches = pitches or chord_model.chord_pitches(chord, 4)
 
-	for _, pitch in ipairs(pitches) do
+	for _, pitch in ipairs(out_pitches) do
 		reaper.MIDI_InsertNote(take, false, false, ppq_start, ppq_end, 0, pitch, 100, false)
 	end
 end
@@ -104,6 +119,38 @@ function midi_writer.insert_chord_at_cursor(chord, qn_duration)
 	reaper.Undo_EndBlock("Insert chord", -1)
 end
 
+function midi_writer.voice_lead_pitches(chord, prev_pitches, octave)
+	local current = sort_numeric(chord_model.chord_pitches(chord, octave or 4))
+	if type(prev_pitches) ~= "table" or #prev_pitches == 0 then
+		return copy_list(current)
+	end
+
+	local prev = sort_numeric(copy_list(prev_pitches))
+	local voiced = {}
+	for i, base_pitch in ipairs(current) do
+		local ref = prev[math.min(i, #prev)]
+		local best = base_pitch
+		local best_dist = math.abs(base_pitch - ref)
+		for k = -3, 3 do
+			local cand = base_pitch + 12 * k
+			local dist = math.abs(cand - ref)
+			if dist < best_dist then
+				best = cand
+				best_dist = dist
+			end
+		end
+		voiced[i] = best
+	end
+
+	for i = 2, #voiced do
+		while voiced[i] <= voiced[i - 1] do
+			voiced[i] = voiced[i] + 12
+		end
+	end
+
+	return voiced
+end
+
 function midi_writer.preview_chord(chord, opts)
 	opts = opts or {}
 	local channel = opts.channel or 0
@@ -116,7 +163,7 @@ function midi_writer.preview_chord(chord, opts)
 	-- Keep preview monophonic per channel to avoid stacked/stuck notes on rapid clicks.
 	clear_preview_now(channel)
 
-	local pitches = chord_model.chord_pitches(chord, octave)
+	local pitches = opts.pitches or chord_model.chord_pitches(chord, octave)
 	for _, pitch in ipairs(pitches) do
 		send_note_on(channel, pitch, velocity)
 		preview_noteoffs[#preview_noteoffs + 1] = {
@@ -152,7 +199,8 @@ function midi_writer.stop_preview()
 	clear_preview_now(nil)
 end
 
-function midi_writer.insert_progression(track, start_pos, progression)
+function midi_writer.insert_progression(track, start_pos, progression, opts)
+	opts = opts or {}
 	local target_track = track or ensure_track()
 	local start_time = start_pos or reaper.GetCursorPosition()
 
@@ -170,11 +218,17 @@ function midi_writer.insert_progression(track, start_pos, progression)
 
 	if take and reaper.TakeIsMIDI(take) then
 		local current_qn = reaper.TimeMap2_timeToQN(0, start_time)
+		local prev_pitches = nil
 		for _, chord in ipairs(progression.chords or {}) do
 			local qn_len = chord.duration or 1
 			local chord_start = reaper.TimeMap2_QNToTime(0, current_qn)
 			local chord_end = reaper.TimeMap2_QNToTime(0, current_qn + qn_len)
-			insert_chord_notes(take, chord, chord_start, chord_end)
+			local pitches = nil
+			if opts.voice_leading == true then
+				pitches = midi_writer.voice_lead_pitches(chord, prev_pitches, 4)
+				prev_pitches = copy_list(pitches)
+			end
+			insert_chord_notes(take, chord, chord_start, chord_end, pitches)
 			current_qn = current_qn + qn_len
 		end
 		reaper.MIDI_Sort(take)

@@ -26,12 +26,10 @@ function storage.get_library_path()
 	return storage.get_root_dir() .. "/" .. LIBRARY_FILENAME
 end
 
-function storage.load_library()
-	local content = reaper_api.read_file(storage.get_library_path())
+local function decode_library(content)
 	if not content then
 		return nil
 	end
-
 	local ok, decoded = pcall(json.decode, content)
 	if not ok or type(decoded) ~= "table" then
 		return nil
@@ -39,9 +37,24 @@ function storage.load_library()
 	return decoded
 end
 
+function storage.load_library()
+	local library_path = storage.get_library_path()
+	local content = reaper_api.read_file(library_path)
+	local decoded = decode_library(content)
+	if decoded then
+		return decoded
+	end
+
+	local backup_content = reaper_api.read_file(library_path .. ".bak")
+	return decode_library(backup_content)
+end
+
 function storage.save_library(library)
-	local encoded = json.encode(library)
-	return reaper_api.write_file(storage.get_library_path(), encoded)
+	local ok, encoded = pcall(json.encode, library)
+	if not ok or type(encoded) ~= "string" then
+		return false
+	end
+	return reaper_api.write_file_atomic(storage.get_library_path(), encoded)
 end
 
 function storage.load_ui_prefs()

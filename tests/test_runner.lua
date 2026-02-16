@@ -89,6 +89,8 @@ end
 local chord_model = require_module("lib.chord_model")
 local harmony_engine = require_module("lib.harmony_engine")
 local json = require_module("lib.json")
+local library_safety = require_module("lib.library_safety")
+local undo = require_module("lib.undo")
 
 log("Chord Progression Notebook - Deep Test Routine")
 log(("Lua runtime: %s"):format(_VERSION))
@@ -243,6 +245,61 @@ run_case("json parse unicode + invalid payload", function()
 	end)
 	assert_true(not ok, "invalid JSON must fail decode")
 	assert_contains(err, "JSON decode error")
+end)
+
+run_case("library_safety normalizes malformed progression", function()
+	local lib, changed = library_safety.sanitize_library({
+		progressions = {
+			{
+				name = 42,
+				key_root = -14,
+				mode = "aeolian",
+				tempo = 999,
+				tags = { "  Bach  ", "", 7 },
+				notes = 777,
+				chords = {
+					{ root = "2", quality = "minor", duration = 0, extensions = 9, bass = "x" },
+					{ root = 14, quality = "unknown", duration = 2.5 },
+				},
+				audio_refs = { { path = 12 }, "bad" },
+			},
+		},
+	})
+
+	assert_true(changed == true)
+	assert_eq(#lib.progressions, 1)
+	local p = lib.progressions[1]
+	assert_eq(p.name, "42")
+	assert_eq(p.key_root, 10)
+	assert_eq(p.mode, "minor")
+	assert_eq(p.tempo, 320)
+	assert_eq(p.tags[1], "Bach")
+	assert_eq(p.tags[2], "7")
+	assert_eq(p.notes, "777")
+	assert_eq(p.chords[1].duration, 1)
+	assert_eq(p.chords[1].extensions, "9")
+	assert_true(p.chords[1].bass == nil)
+	assert_eq(p.chords[2].quality, "major")
+	assert_eq(p.audio_refs[1].path, "12")
+end)
+
+run_case("undo helper pushes/requests safely", function()
+	local calls = 0
+	local last_label = nil
+	local state = {
+		push_undo_snapshot = function(label)
+			calls = calls + 1
+			last_label = label
+		end,
+		undo_requested = false,
+	}
+
+	assert_true(undo.push(state, "Edit") == true)
+	assert_eq(calls, 1)
+	assert_eq(last_label, "Edit")
+	assert_true(undo.request(state) == true)
+	assert_true(state.undo_requested == true)
+	assert_true(undo.push({}, "Noop") == false)
 end)
 
 log("")

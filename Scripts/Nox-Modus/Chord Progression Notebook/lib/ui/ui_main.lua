@@ -1,6 +1,8 @@
 local chord_model = require("lib.chord_model")
 local harmony_engine = require("lib.harmony_engine")
 local midi_writer = require("lib.midi_writer")
+local storage = require("lib.storage")
+local undo = require("lib.undo")
 local ui_circle = require("lib.ui.ui_circle_of_fifths")
 local ui_inspector = require("lib.ui.ui_inspector")
 local ui_library = require("lib.ui.ui_library")
@@ -202,6 +204,7 @@ local function draw_suggestions(ctx, state)
 
 				local label = string.format("%d) %s", i, symbol)
 				if reaper.ImGui_Selectable(ctx, label, false) then
+					undo.push(state, "Apply Suggestion")
 					for k, v in pairs(suggestion) do
 						chord[k] = v
 					end
@@ -223,8 +226,17 @@ local function draw_menu(ctx, state)
 		state.save_requested = true
 	end
 
+	if reaper.ImGui_MenuItem(ctx, "Undo Last Change") then
+		undo.request(state)
+	end
+
 	if reaper.ImGui_MenuItem(ctx, "Import Library From Project...") then
 		ui_library.import_from_project(state)
+	end
+
+	if reaper.ImGui_MenuItem(ctx, "Show Library Path") then
+		local path = storage.get_library_path()
+		reaper.ShowMessageBox("Active working library path:\n" .. tostring(path), "Chord Progression Notebook", 0)
 	end
 
 	if reaper.ImGui_MenuItem(ctx, "Quit") then
@@ -237,7 +249,40 @@ end
 local function draw_left_key_controls(ctx, state)
 	local prog = state.library.progressions[state.selected_progression]
 	if not prog then
+		reaper.ImGui_TextDisabled(ctx, "No project progression selected.")
+		reaper.ImGui_TextDisabled(ctx, "Add one from Reference Library or create a new one.")
 		return
+	end
+
+	local function scale_degree_for_relative_pc(mode, rel_pc)
+		local scale = chord_model.get_scale_degrees(mode)
+		for i, pc in ipairs(scale) do
+			if chord_model.wrap12(pc) == chord_model.wrap12(rel_pc) then
+				return i
+			end
+		end
+		return nil
+	end
+
+	local function remap_progression_for_key_change(prog_ref, old_key, new_key, old_mode, new_mode)
+		local old_scale = chord_model.get_scale_degrees(old_mode)
+		local new_scale = chord_model.get_scale_degrees(new_mode)
+		local delta = chord_model.wrap12((new_key or 0) - (old_key or 0))
+
+		for _, chord in ipairs(prog_ref.chords or {}) do
+			local old_rel = chord_model.wrap12((chord.root or 0) - (old_key or 0))
+			local degree = scale_degree_for_relative_pc(old_mode, old_rel)
+			if degree and old_scale[degree] and new_scale[degree] then
+				chord.root = chord_model.wrap12((new_key or 0) + new_scale[degree])
+			else
+				chord.root = chord_model.wrap12((chord.root or 0) + delta)
+			end
+
+			-- Keep slash-bass movement coherent when transposing key center.
+			if chord.bass ~= nil then
+				chord.bass = chord_model.wrap12((chord.bass or 0) + delta)
+			end
+		end
 	end
 
 	reaper.ImGui_Text(ctx, "Key")
@@ -246,6 +291,12 @@ local function draw_left_key_controls(ctx, state)
 	if reaper.ImGui_BeginCombo(ctx, "##left_key_root", chord_model.note_name(prog.key_root or 0)) then
 		for pc = 0, 11 do
 			if reaper.ImGui_Selectable(ctx, chord_model.note_name(pc), pc == (prog.key_root or 0)) then
+				local old_key = prog.key_root or 0
+				local old_mode = prog.mode or "major"
+				undo.push(state, "Change Key")
+				if state.on_the_fly_reharm == true then
+					remap_progression_for_key_change(prog, old_key, pc, old_mode, old_mode)
+				end
 				prog.key_root = pc
 				state.dirty = true
 			end
@@ -257,6 +308,12 @@ local function draw_left_key_controls(ctx, state)
 	if reaper.ImGui_BeginCombo(ctx, "##left_key_mode", prog.mode or "major") then
 		for _, mode in ipairs(chord_model.MODES) do
 			if reaper.ImGui_Selectable(ctx, mode, mode == (prog.mode or "major")) then
+				local old_key = prog.key_root or 0
+				local old_mode = prog.mode or "major"
+				undo.push(state, "Change Mode")
+				if state.on_the_fly_reharm == true then
+					remap_progression_for_key_change(prog, old_key, old_key, old_mode, mode)
+				end
 				prog.mode = mode
 				state.dirty = true
 			end
@@ -271,8 +328,9 @@ local function draw_left_panel(ctx, state)
 	avail_h = avail_h or 0
 
 	local gap_h = 1
-	local controls_h = 120
-	local lib_h = math.max(1, avail_h - controls_h - gap_h)
+	-- Keep enough height for Key + View/Reharm controls without excessive empty space.
+	local controls_h = math.max(152, math.floor(avail_h * 0.20))
+	local lib_h = math.max(80, avail_h - controls_h - gap_h)
 
 	reaper.ImGui_BeginChild(ctx, "##left_library_area", -1, lib_h, 0)
 	ui_library.draw(ctx, state)
@@ -299,6 +357,20 @@ local function draw_left_panel(ctx, state)
 		state.dirty = true
 	end
 
+	local changed_reharm_live
+	changed_reharm_live, state.on_the_fly_reharm =
+		reaper.ImGui_Checkbox(ctx, "On-the-fly Reharm", state.on_the_fly_reharm == true)
+	if changed_reharm_live then
+		state.dirty = true
+	end
+
+	local changed_voice_leading
+	changed_voice_leading, state.voice_leading_enabled =
+		reaper.ImGui_Checkbox(ctx, "Voice Leading", state.voice_leading_enabled == true)
+	if changed_voice_leading then
+		state.dirty = true
+	end
+
 	local modes = {
 		"diatonic_rotate",
 		"function_preserving",
@@ -318,6 +390,38 @@ local function draw_left_panel(ctx, state)
 end
 
 local function draw_center_panel(ctx, state)
+	local prog = state.library.progressions[state.selected_progression]
+	if not prog then
+		reaper.ImGui_BeginChild(ctx, "##center_empty_state", -1, -1, 1)
+		reaper.ImGui_TextDisabled(ctx, "Project library is empty.")
+		reaper.ImGui_Separator(ctx)
+		reaper.ImGui_TextWrapped(ctx, "Use 'Add To Project' in the Reference Library,")
+		reaper.ImGui_TextWrapped(ctx, "or click 'New Progression' in Project Library.")
+		reaper.ImGui_Dummy(ctx, 0, 8)
+		if reaper.ImGui_Button(ctx, "Add Selected Reference", 200, 0) then
+			ui_library.add_selected_reference_to_project(state, false)
+		end
+		reaper.ImGui_SameLine(ctx)
+		if reaper.ImGui_Button(ctx, "New Progression", 160, 0) then
+			undo.push(state, "New Progression")
+			state.library.progressions[#state.library.progressions + 1] = {
+				name = "New Progression",
+				key_root = 0,
+				mode = "major",
+				tempo = 120,
+				tags = {},
+				notes = "",
+				chords = { { root = 0, quality = "major", duration = 1 } },
+				audio_refs = {},
+			}
+			state.selected_progression = #state.library.progressions
+			state.selected_chord = 1
+			state.dirty = true
+		end
+		reaper.ImGui_EndChild(ctx)
+		return
+	end
+
 	ui_progression_lane.draw_toolbar(ctx, state)
 	reaper.ImGui_Separator(ctx)
 
@@ -359,6 +463,14 @@ local function draw_center_panel(ctx, state)
 end
 
 local function draw_right_panel(ctx, state)
+	local prog = state.library.progressions[state.selected_progression]
+	if not prog then
+		reaper.ImGui_TextDisabled(ctx, "Inspector unavailable: no project progression selected.")
+		reaper.ImGui_Separator(ctx)
+		reaper.ImGui_TextDisabled(ctx, "Suggestions unavailable until a progression is selected.")
+		return
+	end
+
 	ui_inspector.draw(ctx, state)
 	reaper.ImGui_Separator(ctx)
 	draw_suggestions(ctx, state)

@@ -1,7 +1,7 @@
 -- @description Chord Progression Notebook
--- @version 0.5.0
+-- @version 0.9.0
 -- @author Nox-Modus
--- @changelog Maintenance hardening: single-instance lock, safer lifecycle/error handling, deployment metadata.
+-- @changelog Added undo stack wiring for project edits and menu action; incremental UX and stability updates.
 -- @about
 --   Transparent chord progression notebook for REAPER.
 --   Features progression editing, Roman numerals, circle-of-fifths interaction,
@@ -29,6 +29,7 @@ if not reaper_api.has_imgui() then
 end
 
 local json = require("lib.json")
+local library_safety = require("lib.library_safety")
 local midi_writer = require("lib.midi_writer")
 local storage = require("lib.storage")
 local ui_main = require("lib.ui.ui_main")
@@ -62,16 +63,32 @@ end
 local function new_state()
 	return {
 		library = { progressions = {} },
+		reference_library = { progressions = {} },
 		selected_progression = 1,
+		selected_reference_progression = 1,
 		selected_chord = 1,
 		show_roman = false,
 		reharm_mode = "diatonic_rotate",
+		on_the_fly_reharm = true,
+		voice_leading_enabled = true,
 		grain_enabled = false,
 		tag_search = "",
+		provenance_filter = "all",
+		playback_loop = true,
+		library_player = {
+			active = false,
+			source = nil,
+			progression_index = 1,
+			chord_index = 1,
+			next_change_time = 0,
+		},
+		undo_stack = {},
+		undo_limit = 40,
 		ui_open = true,
 		dirty = false,
 
 		save_requested = false,
+		undo_requested = false,
 		insert_chord_requested = false,
 		insert_progression_requested = false,
 		detect_requested = false,
@@ -82,6 +99,67 @@ local state = new_state()
 local ctx = reaper.ImGui_CreateContext(WINDOW_TITLE)
 local is_shutdown = false
 
+local function snapshot_library(library)
+	if type(library) ~= "table" then
+		return nil
+	end
+	local ok_encode, encoded = pcall(json.encode, library)
+	if not ok_encode or type(encoded) ~= "string" then
+		return nil
+	end
+	local ok_decode, decoded = pcall(json.decode, encoded)
+	if not ok_decode or type(decoded) ~= "table" then
+		return nil
+	end
+	return decoded
+end
+
+local function library_fingerprint(library)
+	local ok, encoded = pcall(json.encode, library)
+	if ok and type(encoded) == "string" then
+		return encoded
+	end
+	return ""
+end
+
+local function push_undo_snapshot(label)
+	local snap = snapshot_library(state.library)
+	if not snap then
+		return
+	end
+
+	local fp = library_fingerprint(snap)
+	local top = state.undo_stack[#state.undo_stack]
+	if top and top.fingerprint == fp then
+		return
+	end
+
+	state.undo_stack[#state.undo_stack + 1] = {
+		library = snap,
+		selected_progression = state.selected_progression or 1,
+		selected_chord = state.selected_chord or 1,
+		fingerprint = fp,
+		label = label or "Edit",
+	}
+
+	while #state.undo_stack > (state.undo_limit or 40) do
+		table.remove(state.undo_stack, 1)
+	end
+end
+
+local function undo_last_change()
+	local top = state.undo_stack[#state.undo_stack]
+	if not top then
+		return false
+	end
+	table.remove(state.undo_stack, #state.undo_stack)
+	state.library = snapshot_library(top.library) or top.library
+	state.selected_progression = top.selected_progression or 1
+	state.selected_chord = top.selected_chord or 1
+	state.dirty = true
+	return true
+end
+
 local function load_seed_library()
 	local seed_path = script_path .. "data/library.json"
 	local content = reaper_api.read_file(seed_path)
@@ -91,22 +169,11 @@ local function load_seed_library()
 
 	local ok, decoded = pcall(json.decode, content)
 	if ok and type(decoded) == "table" and type(decoded.progressions) == "table" then
-		return decoded
+		local safe = library_safety.sanitize_library(decoded)
+		return safe
 	end
 
 	return { progressions = {} }
-end
-
-local function deep_copy(value)
-	if type(value) ~= "table" then
-		return value
-	end
-
-	local out = {}
-	for k, v in pairs(value) do
-		out[k] = deep_copy(v)
-	end
-	return out
 end
 
 local function chord_signature(chord)
@@ -183,54 +250,12 @@ local function ensure_reference_links(library, seed)
 	return changed
 end
 
-local function merge_seed_progressions(library, seed)
-	local list = library.progressions or {}
-	local seed_list = (type(seed) == "table" and seed.progressions) or {}
-	if type(seed_list) ~= "table" or #seed_list == 0 then
-		return false
-	end
-
-	local existing = {}
-	local existing_ref_ids = {}
-	for _, prog in ipairs(list) do
-		existing[progression_signature(prog)] = true
-		if type(prog.ref_id) == "string" and prog.ref_id ~= "" then
-			existing_ref_ids[prog.ref_id] = true
-		end
-	end
-
-	local changed = false
-	for _, prog in ipairs(seed_list) do
-		local sig = progression_signature(prog)
-		local ref_id = reference_id_for_progression(prog)
-		if not existing[sig] and not existing_ref_ids[ref_id] then
-			local copy = deep_copy(prog)
-			copy.ref_id = ref_id
-			list[#list + 1] = copy
-			existing[sig] = true
-			existing_ref_ids[ref_id] = true
-			changed = true
-		end
-	end
-
-	library.progressions = list
-	return changed
-end
-
 local function normalize_library(library)
-	library = type(library) == "table" and library or {}
-	library.progressions = type(library.progressions) == "table" and library.progressions or {}
+	local sanitized_changed
+	library, sanitized_changed = library_safety.sanitize_library(library)
 
 	local seed = load_seed_library()
 	local linked_seed = ensure_reference_links(library, seed)
-	local merged_seed = merge_seed_progressions(library, seed)
-	if #library.progressions == 0 then
-		library.progressions = deep_copy(seed.progressions or {})
-		for _, prog in ipairs(library.progressions) do
-			prog.ref_id = reference_id_for_progression(prog)
-		end
-		merged_seed = #library.progressions > 0
-	end
 
 	if #library.progressions == 0 then
 		library.progressions = {
@@ -247,13 +272,13 @@ local function normalize_library(library)
 		}
 	end
 
-	return library, (merged_seed or linked_seed)
+	return library, (linked_seed or sanitized_changed)
 end
 
 local function load_library()
 	local loaded = storage.load_library()
-	local library, merged_seed = normalize_library(loaded)
-	if merged_seed and loaded then
+	local library, migration_changed = normalize_library(loaded)
+	if migration_changed and loaded then
 		state.dirty = true
 	end
 	return library
@@ -281,16 +306,24 @@ local function load_prefs()
 
 	state.show_roman = prefs.show_roman == true
 	state.reharm_mode = prefs.reharm_mode or state.reharm_mode
+	state.on_the_fly_reharm = (prefs.on_the_fly_reharm ~= false)
+	state.voice_leading_enabled = (prefs.voice_leading_enabled ~= false)
 	state.grain_enabled = prefs.grain_enabled == true
 	state.tag_search = tostring(prefs.tag_search or "")
+	state.provenance_filter = tostring(prefs.provenance_filter or state.provenance_filter)
+	state.playback_loop = (prefs.playback_loop ~= false)
 end
 
 local function save_prefs()
 	storage.save_ui_prefs({
 		show_roman = state.show_roman,
 		reharm_mode = state.reharm_mode,
+		on_the_fly_reharm = state.on_the_fly_reharm,
+		voice_leading_enabled = state.voice_leading_enabled,
 		grain_enabled = state.grain_enabled,
 		tag_search = state.tag_search,
+		provenance_filter = state.provenance_filter,
+		playback_loop = state.playback_loop,
 	})
 end
 
@@ -318,6 +351,16 @@ local function clamp_selection()
 	elseif state.selected_chord > chord_count then
 		state.selected_chord = chord_count
 	end
+
+	local refs = state.reference_library and state.reference_library.progressions or {}
+	local rcount = #refs
+	if rcount < 1 then
+		state.selected_reference_progression = 1
+	elseif state.selected_reference_progression < 1 then
+		state.selected_reference_progression = 1
+	elseif state.selected_reference_progression > rcount then
+		state.selected_reference_progression = rcount
+	end
 end
 
 local function handle_save_request()
@@ -325,6 +368,16 @@ local function handle_save_request()
 		save_library_if_needed(true)
 		state.save_requested = false
 	end
+end
+
+local function handle_undo_request()
+	if not state.undo_requested then
+		return
+	end
+	if not undo_last_change() then
+		reaper_api.msg("Nothing to undo.")
+	end
+	state.undo_requested = false
 end
 
 local function handle_insert_chord_request()
@@ -348,7 +401,9 @@ local function handle_insert_progression_request()
 
 	local prog = state.library.progressions[state.selected_progression]
 	if prog then
-		midi_writer.insert_progression(nil, nil, prog)
+		midi_writer.insert_progression(nil, nil, prog, {
+			voice_leading = state.voice_leading_enabled == true,
+		})
 	end
 
 	state.insert_progression_requested = false
@@ -361,6 +416,7 @@ local function handle_detect_request()
 
 	local chords, err = midi_writer.detect_from_selected_item()
 	if chords then
+		push_undo_snapshot("Detect Chords")
 		local prog = state.library.progressions[state.selected_progression]
 		if prog then
 			prog.chords = chords
@@ -376,6 +432,7 @@ end
 
 local function handle_requests()
 	handle_save_request()
+	handle_undo_request()
 	handle_insert_chord_request()
 	handle_insert_progression_request()
 	handle_detect_request()
@@ -399,6 +456,12 @@ local function shutdown()
 end
 
 local function run_frame()
+	local sanitized
+	state.library, sanitized = library_safety.sanitize_library(state.library)
+	if sanitized then
+		state.dirty = true
+	end
+
 	clamp_selection()
 	ui_main.draw(ctx, state)
 	handle_requests()
@@ -424,5 +487,6 @@ end
 
 state.library = load_library()
 state.reference_library = load_seed_library()
+state.push_undo_snapshot = push_undo_snapshot
 load_prefs()
 reaper.defer(main)

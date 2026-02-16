@@ -1,6 +1,7 @@
 local chord_model = require("lib.chord_model")
 local harmony_engine = require("lib.harmony_engine")
 local midi_writer = require("lib.midi_writer")
+local undo = require("lib.undo")
 
 local ui_progression_lane = {}
 
@@ -41,6 +42,7 @@ local function draw_context_menu(ctx, state, chords, chord, index)
 	end
 
 	if reaper.ImGui_MenuItem(ctx, "Duplicate") then
+		undo.push(state, "Duplicate Chord")
 		local copy = {}
 		for k, v in pairs(chord) do
 			copy[k] = v
@@ -50,6 +52,7 @@ local function draw_context_menu(ctx, state, chords, chord, index)
 	end
 
 	if reaper.ImGui_MenuItem(ctx, "Delete") then
+		undo.push(state, "Delete Chord")
 		table.remove(chords, index)
 		if state.selected_chord > #chords then
 			state.selected_chord = #chords
@@ -80,6 +83,7 @@ local function draw_dragdrop(ctx, state, chords, label, index)
 	if accepted and payload then
 		local from_idx = tonumber(payload)
 		if from_idx and from_idx ~= index then
+			undo.push(state, "Reorder Chords")
 			swap(chords, from_idx, index)
 			state.selected_chord = index
 			state.dirty = true
@@ -177,6 +181,7 @@ function ui_progression_lane.draw_list(ctx, state)
 	end
 
 	if reaper.ImGui_Button(ctx, "+ Add Chord", btn_w, button_h) then
+		undo.push(state, "Add Chord")
 		chords[#chords + 1] = {
 			root = prog.key_root or 0,
 			quality = "major",
@@ -190,6 +195,7 @@ function ui_progression_lane.draw_list(ctx, state)
 	if reaper.ImGui_Button(ctx, "Delete Chord", btn_w, button_h) then
 		local idx = state.selected_chord or #chords
 		if #chords > 0 and idx >= 1 and idx <= #chords then
+			undo.push(state, "Delete Chord")
 			table.remove(chords, idx)
 			if idx > #chords then
 				idx = #chords

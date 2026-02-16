@@ -46,6 +46,41 @@ function reaper_api.write_file(path, content)
 	return true
 end
 
+local function file_exists(path)
+	local file = io.open(path, "rb")
+	if not file then
+		return false
+	end
+	file:close()
+	return true
+end
+
+function reaper_api.write_file_atomic(path, content)
+	local tmp_path = tostring(path) .. ".tmp"
+	local bak_path = tostring(path) .. ".bak"
+
+	if not reaper_api.write_file(tmp_path, content) then
+		return false
+	end
+
+	local had_old = file_exists(path)
+	if had_old then
+		os.remove(bak_path)
+		os.rename(path, bak_path)
+	end
+
+	local renamed = os.rename(tmp_path, path)
+	if renamed then
+		return true
+	end
+
+	os.remove(tmp_path)
+	if had_old then
+		os.rename(bak_path, path)
+	end
+	return reaper_api.write_file(path, content)
+end
+
 function reaper_api.msg(text)
 	reaper.ShowMessageBox(tostring(text), "Chord Progression Notebook", 0)
 end

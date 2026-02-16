@@ -198,3 +198,25 @@ For bugs and feature requests, please use this repository's issue tracker (recom
 - any console output
 
 For optional ways to support development, see `SUPPORT.md`.
+
+---
+
+## Version Change Summary
+
+### v0.9.0
+- Added full undo workflow for project edits (`Undo Last Change` in menu).
+- Added safety hardening for malformed library/progression/chord data.
+- Added atomic library save with backup fallback load (`library.json.bak`).
+- Refactored undo calls into shared helper module for consistency.
+- Extended automated tests for safety normalization and undo behavior.
+
+### v0.7.x to v0.8.x
+- Added reference (read-only) + project (editable) split library workflow.
+- Added `Add To Project`, `Duplicate To Project`, and `Restore From Reference`.
+- Added `Import Library From Project` merge workflow (no destructive overwrite).
+- Added tag filtering and provenance filtering for library browsing.
+- Added path visibility helper (`Show Library Path`) to reduce storage confusion.
+- Added progression playback controls (`Play Selected`, `Stop`, `Loop`).
+- Added on-the-fly reharmonization on key/mode change.
+- Added optional voice-leading behavior for playback/insertion.
+- Multiple GUI layout and stability fixes for list panels and controls.

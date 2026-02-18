@@ -3,6 +3,7 @@ local json = require("lib.json")
 local library_safety = require("lib.library_safety")
 local midi_writer = require("lib.midi_writer")
 local undo = require("lib.undo")
+local imgui_guard = require("lib.ui.imgui_guard")
 
 local ui_library = {}
 
@@ -710,7 +711,14 @@ function ui_library.draw(ctx, state)
 	if reaper.ImGui_SetNextItemWidth then
 		reaper.ImGui_SetNextItemWidth(ctx, -1)
 	end
-	if reaper.ImGui_BeginCombo(ctx, "##provenance_filter", preview_label) then
+	local did_provenance_combo = imgui_guard.begin_combo(
+		ctx,
+		state,
+		"##provenance_filter",
+		preview_label,
+		"ui_library.combo.provenance_filter"
+	)
+	if did_provenance_combo then
 		for _, item in ipairs(PROVENANCE_FILTER_OPTIONS) do
 			if reaper.ImGui_Selectable(ctx, item.label, item.value == active_provenance) then
 				state.provenance_filter = item.value
@@ -718,8 +726,8 @@ function ui_library.draw(ctx, state)
 				filter_changed = true
 			end
 		end
-		reaper.ImGui_EndCombo(ctx)
 	end
+	imgui_guard.end_combo(ctx, state, did_provenance_combo, "ui_library.combo.provenance_filter")
 
 	local filter_tokens = parse_filter_tokens(state.tag_search)
 	if filter_changed and not progression_matches_filters(
@@ -770,9 +778,20 @@ function ui_library.draw(ctx, state)
 	avail_w = avail_w or 0
 	avail_h = avail_h or 0
 	local ref_h = math.max(80, math.floor(avail_h * 0.34))
-	reaper.ImGui_BeginChild(ctx, "##library_reference_list", -1, ref_h, 1)
-	draw_reference_list(ctx, state, filter_tokens, state.provenance_filter)
-	reaper.ImGui_EndChild(ctx)
+	local did_reference_child = imgui_guard.begin_child(
+		ctx,
+		state,
+		"##library_reference_list",
+		-1,
+		ref_h,
+		1,
+		nil,
+		"ui_library.child.reference_list"
+	)
+	if did_reference_child then
+		draw_reference_list(ctx, state, filter_tokens, state.provenance_filter)
+	end
+	imgui_guard.end_child(ctx, state, did_reference_child, "ui_library.child.reference_list")
 
 	reaper.ImGui_Separator(ctx)
 	reaper.ImGui_Text(ctx, "Project Library")
@@ -827,9 +846,20 @@ function ui_library.draw(ctx, state)
 	local playback_h = 52
 	local list_h = math.max(60, project_avail_h - playback_h - 6)
 
-	reaper.ImGui_BeginChild(ctx, "##library_progression_list", -1, list_h, 1)
-	draw_progression_list(ctx, state, filter_tokens, state.provenance_filter)
-	reaper.ImGui_EndChild(ctx)
+	local did_progression_child = imgui_guard.begin_child(
+		ctx,
+		state,
+		"##library_progression_list",
+		-1,
+		list_h,
+		1,
+		nil,
+		"ui_library.child.progression_list"
+	)
+	if did_progression_child then
+		draw_progression_list(ctx, state, filter_tokens, state.provenance_filter)
+	end
+	imgui_guard.end_child(ctx, state, did_progression_child, "ui_library.child.progression_list")
 
 	local source_label = (state.last_selected_library == "reference") and "Reference selected" or "Project selected"
 	reaper.ImGui_TextDisabled(ctx, source_label)

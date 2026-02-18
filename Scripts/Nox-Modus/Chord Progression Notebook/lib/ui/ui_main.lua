@@ -4,6 +4,7 @@ local midi_writer = require("lib.midi_writer")
 local storage = require("lib.storage")
 local undo = require("lib.undo")
 local ui_circle = require("lib.ui.ui_circle_of_fifths")
+local imgui_guard = require("lib.ui.imgui_guard")
 local ui_inspector = require("lib.ui.ui_inspector")
 local ui_library = require("lib.ui.ui_library")
 local ui_progression_lane = require("lib.ui.ui_progression_lane")
@@ -180,45 +181,52 @@ local function draw_suggestions(ctx, state)
 			end
 		end
 	else
-		reaper.ImGui_BeginChild(ctx, "##suggest_actions", left_w, panel_h, 1)
-		for _, item in ipairs(actions) do
-			if reaper.ImGui_Button(ctx, item.label, button_w, 0) then
-				item.run()
+		local did_actions_child =
+			imgui_guard.begin_child(ctx, state, "##suggest_actions", left_w, panel_h, 1, nil, "ui_main.child.suggest_actions")
+		if did_actions_child then
+			for _, item in ipairs(actions) do
+				if reaper.ImGui_Button(ctx, item.label, button_w, 0) then
+					item.run()
+				end
 			end
 		end
-		reaper.ImGui_EndChild(ctx)
+		imgui_guard.end_child(ctx, state, did_actions_child, "ui_main.child.suggest_actions")
 
 		reaper.ImGui_SameLine(ctx, nil, gap)
 
-		reaper.ImGui_BeginChild(ctx, "##suggest_results", right_w, panel_h, 1)
-		if not state.suggestions or #state.suggestions == 0 then
-			reaper.ImGui_TextDisabled(ctx, "No suggestions yet.")
-		else
-			for i, suggestion in ipairs(state.suggestions) do
-				local symbol
-				if state.show_roman then
-					symbol = chord_model.roman_symbol(suggestion, prog.key_root, prog.mode)
-				else
-					symbol = chord_model.chord_symbol(suggestion)
-				end
-
-				local label = string.format("%d) %s", i, symbol)
-				if reaper.ImGui_Selectable(ctx, label, false) then
-					undo.push(state, "Apply Suggestion")
-					for k, v in pairs(suggestion) do
-						chord[k] = v
+		local did_results_child =
+			imgui_guard.begin_child(ctx, state, "##suggest_results", right_w, panel_h, 1, nil, "ui_main.child.suggest_results")
+		if did_results_child then
+			if not state.suggestions or #state.suggestions == 0 then
+				reaper.ImGui_TextDisabled(ctx, "No suggestions yet.")
+			else
+				for i, suggestion in ipairs(state.suggestions) do
+					local symbol
+					if state.show_roman then
+						symbol = chord_model.roman_symbol(suggestion, prog.key_root, prog.mode)
+					else
+						symbol = chord_model.chord_symbol(suggestion)
 					end
-					state.dirty = true
-					midi_writer.preview_click(chord)
+
+					local label = string.format("%d) %s", i, symbol)
+					if reaper.ImGui_Selectable(ctx, label, false) then
+						undo.push(state, "Apply Suggestion")
+						for k, v in pairs(suggestion) do
+							chord[k] = v
+						end
+						state.dirty = true
+						midi_writer.preview_click(chord)
+					end
 				end
 			end
 		end
-		reaper.ImGui_EndChild(ctx)
+		imgui_guard.end_child(ctx, state, did_results_child, "ui_main.child.suggest_results")
 	end
 end
 
 local function draw_menu(ctx, state)
-	if not reaper.ImGui_BeginMenuBar or not reaper.ImGui_BeginMenuBar(ctx) then
+	local did_menubar = imgui_guard.begin_menubar(ctx, state, "ui_main.menubar.main")
+	if not did_menubar then
 		return
 	end
 
@@ -243,7 +251,7 @@ local function draw_menu(ctx, state)
 		state.ui_open = false
 	end
 
-	reaper.ImGui_EndMenuBar(ctx)
+	imgui_guard.end_menubar(ctx, state, did_menubar, "ui_main.menubar.main")
 end
 
 local function draw_left_key_controls(ctx, state)
@@ -288,7 +296,9 @@ local function draw_left_key_controls(ctx, state)
 	reaper.ImGui_Text(ctx, "Key")
 	reaper.ImGui_SameLine(ctx)
 
-	if reaper.ImGui_BeginCombo(ctx, "##left_key_root", chord_model.note_name(prog.key_root or 0)) then
+	local did_key_root_combo =
+		imgui_guard.begin_combo(ctx, state, "##left_key_root", chord_model.note_name(prog.key_root or 0), "ui_main.combo.left_key_root")
+	if did_key_root_combo then
 		for pc = 0, 11 do
 			if reaper.ImGui_Selectable(ctx, chord_model.note_name(pc), pc == (prog.key_root or 0)) then
 				local old_key = prog.key_root or 0
@@ -301,11 +311,13 @@ local function draw_left_key_controls(ctx, state)
 				state.dirty = true
 			end
 		end
-		reaper.ImGui_EndCombo(ctx)
 	end
+	imgui_guard.end_combo(ctx, state, did_key_root_combo, "ui_main.combo.left_key_root")
 
 	reaper.ImGui_SameLine(ctx)
-	if reaper.ImGui_BeginCombo(ctx, "##left_key_mode", prog.mode or "major") then
+	local did_key_mode_combo =
+		imgui_guard.begin_combo(ctx, state, "##left_key_mode", prog.mode or "major", "ui_main.combo.left_key_mode")
+	if did_key_mode_combo then
 		for _, mode in ipairs(chord_model.MODES) do
 			if reaper.ImGui_Selectable(ctx, mode, mode == (prog.mode or "major")) then
 				local old_key = prog.key_root or 0
@@ -318,8 +330,8 @@ local function draw_left_key_controls(ctx, state)
 				state.dirty = true
 			end
 		end
-		reaper.ImGui_EndCombo(ctx)
 	end
+	imgui_guard.end_combo(ctx, state, did_key_mode_combo, "ui_main.combo.left_key_mode")
 end
 
 local function draw_left_panel(ctx, state)
@@ -332,9 +344,12 @@ local function draw_left_panel(ctx, state)
 	local controls_h = math.max(152, math.floor(avail_h * 0.20))
 	local lib_h = math.max(80, avail_h - controls_h - gap_h)
 
-	reaper.ImGui_BeginChild(ctx, "##left_library_area", -1, lib_h, 0)
-	ui_library.draw(ctx, state)
-	reaper.ImGui_EndChild(ctx)
+	local did_library_child =
+		imgui_guard.begin_child(ctx, state, "##left_library_area", -1, lib_h, 0, nil, "ui_main.child.left_library_area")
+	if did_library_child then
+		ui_library.draw(ctx, state)
+	end
+	imgui_guard.end_child(ctx, state, did_library_child, "ui_main.child.left_library_area")
 
 	reaper.ImGui_Dummy(ctx, 0, gap_h)
 
@@ -346,79 +361,87 @@ local function draw_left_panel(ctx, state)
 		settings_flags = settings_flags | reaper.ImGui_WindowFlags_NoScrollWithMouse()
 	end
 
-	reaper.ImGui_BeginChild(ctx, "##left_settings_area", -1, -1, 1, settings_flags)
-	draw_left_key_controls(ctx, state)
-	reaper.ImGui_Separator(ctx)
-	reaper.ImGui_Text(ctx, "View / Reharm")
+	local did_settings_child =
+		imgui_guard.begin_child(ctx, state, "##left_settings_area", -1, -1, 1, settings_flags, "ui_main.child.left_settings_area")
+	if did_settings_child then
+		draw_left_key_controls(ctx, state)
+		reaper.ImGui_Separator(ctx)
+		reaper.ImGui_Text(ctx, "View / Reharm")
 
-	local changed_show
-	changed_show, state.show_roman = reaper.ImGui_Checkbox(ctx, "Roman Numerals", state.show_roman)
-	if changed_show then
-		state.dirty = true
-	end
+		local changed_show
+		changed_show, state.show_roman = reaper.ImGui_Checkbox(ctx, "Roman Numerals", state.show_roman)
+		if changed_show then
+			state.dirty = true
+		end
 
-	local changed_reharm_live
-	changed_reharm_live, state.on_the_fly_reharm =
-		reaper.ImGui_Checkbox(ctx, "On-the-fly Reharm", state.on_the_fly_reharm == true)
-	if changed_reharm_live then
-		state.dirty = true
-	end
+		local changed_reharm_live
+		changed_reharm_live, state.on_the_fly_reharm =
+			reaper.ImGui_Checkbox(ctx, "On-the-fly Reharm", state.on_the_fly_reharm == true)
+		if changed_reharm_live then
+			state.dirty = true
+		end
 
-	local changed_voice_leading
-	changed_voice_leading, state.voice_leading_enabled =
-		reaper.ImGui_Checkbox(ctx, "Voice Leading", state.voice_leading_enabled == true)
-	if changed_voice_leading then
-		state.dirty = true
-	end
+		local changed_voice_leading
+		changed_voice_leading, state.voice_leading_enabled =
+			reaper.ImGui_Checkbox(ctx, "Voice Leading", state.voice_leading_enabled == true)
+		if changed_voice_leading then
+			state.dirty = true
+		end
 
-	local modes = {
-		"diatonic_rotate",
-		"function_preserving",
-		"chromatic_approach",
-		"modal_interchange",
-	}
+		local modes = {
+			"diatonic_rotate",
+			"function_preserving",
+			"chromatic_approach",
+			"modal_interchange",
+		}
 
-	if reaper.ImGui_BeginCombo(ctx, "Reharm Mode", state.reharm_mode or modes[1]) then
-		for _, mode in ipairs(modes) do
-			if reaper.ImGui_Selectable(ctx, mode, mode == state.reharm_mode) then
-				state.reharm_mode = mode
+		local did_reharm_combo =
+			imgui_guard.begin_combo(ctx, state, "Reharm Mode", state.reharm_mode or modes[1], "ui_main.combo.reharm_mode")
+		if did_reharm_combo then
+			for _, mode in ipairs(modes) do
+				if reaper.ImGui_Selectable(ctx, mode, mode == state.reharm_mode) then
+					state.reharm_mode = mode
+				end
 			end
 		end
-		reaper.ImGui_EndCombo(ctx)
+		imgui_guard.end_combo(ctx, state, did_reharm_combo, "ui_main.combo.reharm_mode")
 	end
-	reaper.ImGui_EndChild(ctx)
+	imgui_guard.end_child(ctx, state, did_settings_child, "ui_main.child.left_settings_area")
 end
 
 local function draw_center_panel(ctx, state)
 	local prog = state.library.progressions[state.selected_progression]
 	if not prog then
-		reaper.ImGui_BeginChild(ctx, "##center_empty_state", -1, -1, 1)
-		reaper.ImGui_TextDisabled(ctx, "Project library is empty.")
-		reaper.ImGui_Separator(ctx)
-		reaper.ImGui_TextWrapped(ctx, "Use 'Add To Project' in the Reference Library,")
-		reaper.ImGui_TextWrapped(ctx, "or click 'New Progression' in Project Library.")
-		reaper.ImGui_Dummy(ctx, 0, 8)
-		if reaper.ImGui_Button(ctx, "Add Selected Reference", 200, 0) then
-			ui_library.add_selected_reference_to_project(state, false)
+		local did_empty_child =
+			imgui_guard.begin_child(ctx, state, "##center_empty_state", -1, -1, 1, nil, "ui_main.child.center_empty_state")
+		if did_empty_child then
+			reaper.ImGui_TextDisabled(ctx, "Project library is empty.")
+			reaper.ImGui_Separator(ctx)
+			reaper.ImGui_TextWrapped(ctx, "Use 'Add To Project' in the Reference Library,")
+			reaper.ImGui_TextWrapped(ctx, "or click 'New Progression' in Project Library.")
+			reaper.ImGui_Dummy(ctx, 0, 8)
+			if reaper.ImGui_Button(ctx, "Add Selected Reference", 200, 0) then
+				ui_library.add_selected_reference_to_project(state, false)
+			end
+			reaper.ImGui_SameLine(ctx)
+			if reaper.ImGui_Button(ctx, "New Progression", 160, 0) then
+				undo.push(state, "New Progression")
+				state.library.progressions[#state.library.progressions + 1] = {
+					name = "New Progression",
+					key_root = 0,
+					mode = "major",
+					tempo = 120,
+					tags = {},
+					notes = "",
+					chords = { { root = 0, quality = "major", duration = 1 } },
+					audio_refs = {},
+				}
+				state.selected_progression = #state.library.progressions
+				state.selected_chord = 1
+				state.dirty = true
+			end
 		end
-		reaper.ImGui_SameLine(ctx)
-		if reaper.ImGui_Button(ctx, "New Progression", 160, 0) then
-			undo.push(state, "New Progression")
-			state.library.progressions[#state.library.progressions + 1] = {
-				name = "New Progression",
-				key_root = 0,
-				mode = "major",
-				tempo = 120,
-				tags = {},
-				notes = "",
-				chords = { { root = 0, quality = "major", duration = 1 } },
-				audio_refs = {},
-			}
-			state.selected_progression = #state.library.progressions
-			state.selected_chord = 1
-			state.dirty = true
-		end
-		reaper.ImGui_EndChild(ctx)
+		imgui_guard.end_child(ctx, state, did_empty_child, "ui_main.child.center_empty_state")
 		return
 	end
 
@@ -443,9 +466,12 @@ local function draw_center_panel(ctx, state)
 		circle_h = max_circle_from_list
 	end
 
-	reaper.ImGui_BeginChild(ctx, "##center_circle_area", -1, circle_h, 1)
-	ui_circle.draw(ctx, state)
-	reaper.ImGui_EndChild(ctx)
+	local did_circle_child =
+		imgui_guard.begin_child(ctx, state, "##center_circle_area", -1, circle_h, 1, nil, "ui_main.child.center_circle_area")
+	if did_circle_child then
+		ui_circle.draw(ctx, state)
+	end
+	imgui_guard.end_child(ctx, state, did_circle_child, "ui_main.child.center_circle_area")
 
 	reaper.ImGui_Dummy(ctx, 0, spacing_h)
 
@@ -457,9 +483,20 @@ local function draw_center_panel(ctx, state)
 	if reaper.ImGui_WindowFlags_NoScrollWithMouse then
 		prog_flags = prog_flags | reaper.ImGui_WindowFlags_NoScrollWithMouse()
 	end
-	reaper.ImGui_BeginChild(ctx, "##progression_bottom_left", -1, -1, 1, prog_flags)
-	ui_progression_lane.draw_list(ctx, state)
-	reaper.ImGui_EndChild(ctx)
+	local did_bottom_child = imgui_guard.begin_child(
+		ctx,
+		state,
+		"##progression_bottom_left",
+		-1,
+		-1,
+		1,
+		prog_flags,
+		"ui_main.child.progression_bottom_left"
+	)
+	if did_bottom_child then
+		ui_progression_lane.draw_list(ctx, state)
+	end
+	imgui_guard.end_child(ctx, state, did_bottom_child, "ui_main.child.progression_bottom_left")
 end
 
 local function draw_right_panel(ctx, state)
@@ -493,21 +530,28 @@ local function draw_three_panel_layout(ctx, state)
 	if reaper.ImGui_WindowFlags_NoScrollWithMouse then
 		left_flags = left_flags | reaper.ImGui_WindowFlags_NoScrollWithMouse()
 	end
-	reaper.ImGui_BeginChild(ctx, "##left", left_w, -1, 1, left_flags)
-	draw_left_panel(ctx, state)
-	reaper.ImGui_EndChild(ctx)
+	local did_left_child = imgui_guard.begin_child(ctx, state, "##left", left_w, -1, 1, left_flags, "ui_main.child.layout_left")
+	if did_left_child then
+		draw_left_panel(ctx, state)
+	end
+	imgui_guard.end_child(ctx, state, did_left_child, "ui_main.child.layout_left")
 
 	reaper.ImGui_SameLine(ctx, nil, gap)
 
-	reaper.ImGui_BeginChild(ctx, "##center", center_w, -1, 1)
-	draw_center_panel(ctx, state)
-	reaper.ImGui_EndChild(ctx)
+	local did_center_child =
+		imgui_guard.begin_child(ctx, state, "##center", center_w, -1, 1, nil, "ui_main.child.layout_center")
+	if did_center_child then
+		draw_center_panel(ctx, state)
+	end
+	imgui_guard.end_child(ctx, state, did_center_child, "ui_main.child.layout_center")
 
 	reaper.ImGui_SameLine(ctx, nil, gap)
 
-	reaper.ImGui_BeginChild(ctx, "##right", right_w, -1, 1)
-	draw_right_panel(ctx, state)
-	reaper.ImGui_EndChild(ctx)
+	local did_right_child = imgui_guard.begin_child(ctx, state, "##right", right_w, -1, 1, nil, "ui_main.child.layout_right")
+	if did_right_child then
+		draw_right_panel(ctx, state)
+	end
+	imgui_guard.end_child(ctx, state, did_right_child, "ui_main.child.layout_right")
 end
 
 function ui_main.draw(ctx, state)
@@ -522,17 +566,23 @@ function ui_main.draw(ctx, state)
 		reaper.ImGui_SetNextWindowSizeConstraints(ctx, MIN_WINDOW_W, MIN_WINDOW_H, 10000, 10000)
 	end
 
-	local visible, open =
-		reaper.ImGui_Begin(ctx, "Chord Progression Notebook", true, reaper.ImGui_WindowFlags_MenuBar())
+	local did_window, visible, open = imgui_guard.begin_window(
+		ctx,
+		state,
+		"Chord Progression Notebook",
+		true,
+		reaper.ImGui_WindowFlags_MenuBar(),
+		"ui_main.window.main"
+	)
 	state.ui_open = open == nil and true or open
 
-	if visible then
+	if did_window and visible then
 		draw_background(ctx, state)
 		draw_menu(ctx, state)
 		draw_three_panel_layout(ctx, state)
 	end
 
-	reaper.ImGui_End(ctx)
+	imgui_guard.end_window(ctx, state, did_window, "ui_main.window.main")
 	pop_style(ctx, style_count)
 end
 

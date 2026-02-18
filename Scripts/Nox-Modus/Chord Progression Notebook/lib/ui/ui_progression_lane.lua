@@ -1,5 +1,6 @@
 local chord_model = require("lib.chord_model")
 local harmony_engine = require("lib.harmony_engine")
+local imgui_guard = require("lib.ui.imgui_guard")
 local midi_writer = require("lib.midi_writer")
 local undo = require("lib.undo")
 
@@ -134,40 +135,51 @@ function ui_progression_lane.draw_list(ctx, state)
 	local button_h = 26
 	local list_h = math.max(1, avail_h - button_h - gap_h)
 
-	reaper.ImGui_BeginChild(ctx, "##chord_list_scroll", -1, list_h, 0)
-	for i, chord in ipairs(chords) do
-		reaper.ImGui_PushID(ctx, i)
+	local did_chord_list_child = imgui_guard.begin_child(
+		ctx,
+		state,
+		"##chord_list_scroll",
+		-1,
+		list_h,
+		0,
+		nil,
+		"ui_progression_lane.child.chord_list_scroll"
+	)
+	if did_chord_list_child then
+		for i, chord in ipairs(chords) do
+			reaper.ImGui_PushID(ctx, i)
 
-		local label = chord_label(state, prog, chord)
-		local selected = state.selected_chord == i
-		local style_count = 0
+			local label = chord_label(state, prog, chord)
+			local selected = state.selected_chord == i
+			local style_count = 0
 
-		if selected and reaper.ImGui_PushStyleColor then
-			reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_Header(), ROW_SELECTED_BG)
-			reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_HeaderHovered(), ROW_SELECTED_HOVER)
-			reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_HeaderActive(), ROW_SELECTED_ACTIVE)
-			reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_Text(), ROW_SELECTED_TEXT)
-			style_count = 4
-		end
-
-		if reaper.ImGui_Selectable(ctx, label, selected, reaper.ImGui_SelectableFlags_AllowDoubleClick()) then
-			state.selected_chord = i
-			midi_writer.preview_click(chord)
-			if reaper.ImGui_IsMouseDoubleClicked(ctx, 0) then
-				state.insert_chord_requested = true
+			if selected and reaper.ImGui_PushStyleColor then
+				reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_Header(), ROW_SELECTED_BG)
+				reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_HeaderHovered(), ROW_SELECTED_HOVER)
+				reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_HeaderActive(), ROW_SELECTED_ACTIVE)
+				reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_Text(), ROW_SELECTED_TEXT)
+				style_count = 4
 			end
+
+			if reaper.ImGui_Selectable(ctx, label, selected, reaper.ImGui_SelectableFlags_AllowDoubleClick()) then
+				state.selected_chord = i
+				midi_writer.preview_click(chord)
+				if reaper.ImGui_IsMouseDoubleClicked(ctx, 0) then
+					state.insert_chord_requested = true
+				end
+			end
+
+			if style_count > 0 and reaper.ImGui_PopStyleColor then
+				reaper.ImGui_PopStyleColor(ctx, style_count)
+			end
+
+			draw_dragdrop(ctx, state, chords, label, i)
+			draw_context_menu(ctx, state, chords, chord, i)
+
+			reaper.ImGui_PopID(ctx)
 		end
-
-		if style_count > 0 and reaper.ImGui_PopStyleColor then
-			reaper.ImGui_PopStyleColor(ctx, style_count)
-		end
-
-		draw_dragdrop(ctx, state, chords, label, i)
-		draw_context_menu(ctx, state, chords, chord, i)
-
-		reaper.ImGui_PopID(ctx)
 	end
-	reaper.ImGui_EndChild(ctx)
+	imgui_guard.end_child(ctx, state, did_chord_list_child, "ui_progression_lane.child.chord_list_scroll")
 
 	if gap_h > 0 then
 		reaper.ImGui_Dummy(ctx, 0, gap_h)

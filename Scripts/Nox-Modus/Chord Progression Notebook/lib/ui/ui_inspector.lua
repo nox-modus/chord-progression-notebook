@@ -1,5 +1,6 @@
 local chord_model = require("lib.chord_model")
 local undo = require("lib.undo")
+local imgui_guard = require("lib.ui.imgui_guard")
 
 local ui_inspector = {}
 
@@ -19,7 +20,14 @@ local function string_to_tags(text)
 end
 
 local function draw_root_combo(ctx, state, chord)
-	if not reaper.ImGui_BeginCombo(ctx, "Root", chord_model.note_name(chord.root or 0)) then
+	local did_root_combo = imgui_guard.begin_combo(
+		ctx,
+		state,
+		"Root",
+		chord_model.note_name(chord.root or 0),
+		"ui_inspector.combo.root"
+	)
+	if not did_root_combo then
 		return
 	end
 
@@ -31,12 +39,14 @@ local function draw_root_combo(ctx, state, chord)
 		end
 	end
 
-	reaper.ImGui_EndCombo(ctx)
+	imgui_guard.end_combo(ctx, state, did_root_combo, "ui_inspector.combo.root")
 end
 
 local function draw_quality_combo(ctx, state, chord)
 	local selected = chord.quality or "major"
-	if not reaper.ImGui_BeginCombo(ctx, "Quality", selected) then
+	local did_quality_combo =
+		imgui_guard.begin_combo(ctx, state, "Quality", selected, "ui_inspector.combo.quality")
+	if not did_quality_combo then
 		return
 	end
 
@@ -48,12 +58,13 @@ local function draw_quality_combo(ctx, state, chord)
 		end
 	end
 
-	reaper.ImGui_EndCombo(ctx)
+	imgui_guard.end_combo(ctx, state, did_quality_combo, "ui_inspector.combo.quality")
 end
 
 local function draw_bass_combo(ctx, state, chord)
 	local preview = chord.bass and chord_model.note_name(chord.bass) or "(none)"
-	if not reaper.ImGui_BeginCombo(ctx, "Bass", preview) then
+	local did_bass_combo = imgui_guard.begin_combo(ctx, state, "Bass", preview, "ui_inspector.combo.bass")
+	if not did_bass_combo then
 		return
 	end
 
@@ -71,7 +82,7 @@ local function draw_bass_combo(ctx, state, chord)
 		end
 	end
 
-	reaper.ImGui_EndCombo(ctx)
+	imgui_guard.end_combo(ctx, state, did_bass_combo, "ui_inspector.combo.bass")
 end
 
 local function draw_audio_refs(ctx, state, prog)

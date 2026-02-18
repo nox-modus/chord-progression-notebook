@@ -64,6 +64,12 @@ local function assert_contains(text, needle, msg)
 	end
 end
 
+local function assert_not_contains(text, needle, msg)
+	if tostring(text):find(needle, 1, true) then
+		error(msg or ("expected '%s' to not include '%s'"):format(tostring(text), tostring(needle)), 2)
+	end
+end
+
 local function run_case(name, fn)
 	total = total + 1
 	local ok, err = xpcall(fn, debug.traceback)
@@ -88,6 +94,7 @@ end
 
 local chord_model = require_module("lib.chord_model")
 local harmony_engine = require_module("lib.harmony_engine")
+local imgui_guard = require_module("lib.ui.imgui_guard")
 local json = require_module("lib.json")
 local library_safety = require_module("lib.library_safety")
 local undo = require_module("lib.undo")
@@ -300,6 +307,146 @@ run_case("undo helper pushes/requests safely", function()
 	assert_true(undo.request(state) == true)
 	assert_true(state.undo_requested == true)
 	assert_true(undo.push({}, "Noop") == false)
+end)
+
+run_case("ui modules avoid raw ImGui End* lifecycle calls", function()
+	local ui_files = {
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_main.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_library.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_inspector.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_progression_lane.lua",
+	}
+
+	for _, rel in ipairs(ui_files) do
+		local path = path_join(root_clean, rel)
+		local fh = io.open(path, "rb")
+		assert_true(fh ~= nil, "missing UI source file: " .. rel)
+		local src = fh:read("*a") or ""
+		fh:close()
+
+		assert_not_contains(src, "ImGui_End(", rel .. " should use imgui_guard.end_window")
+		assert_not_contains(src, "ImGui_EndChild(", rel .. " should use imgui_guard.end_child")
+		assert_not_contains(src, "ImGui_EndCombo(", rel .. " should use imgui_guard.end_combo")
+		assert_not_contains(src, "ImGui_EndMenuBar(", rel .. " should use imgui_guard.end_menubar")
+	end
+end)
+
+run_case("imgui_guard begin failure is safe and logs once per callsite", function()
+	local old_reaper = _G.reaper
+	local ok, err = xpcall(function()
+		local shown_messages = {}
+		local begin_calls = 0
+		local combo_calls = 0
+		local end_calls = 0
+
+		_G.reaper = {
+			ImGui_Begin = function()
+				begin_calls = begin_calls + 1
+				error("begin failed")
+			end,
+			ImGui_BeginCombo = function()
+				combo_calls = combo_calls + 1
+				error("combo begin failed")
+			end,
+			ImGui_End = function()
+				end_calls = end_calls + 1
+			end,
+			ShowMessageBox = function(msg)
+				shown_messages[#shown_messages + 1] = tostring(msg)
+				return 0
+			end,
+		}
+
+		local state = {}
+		local did_begin_1, visible_1, open_1 = imgui_guard.begin_window(
+			{},
+			state,
+			"Chord Progression Notebook",
+			true,
+			0,
+			"test.window.main"
+		)
+		local did_begin_2 = imgui_guard.begin_combo({}, state, "Any", "Preview", "test.window.main")
+
+		assert_true(did_begin_1 == false)
+		assert_true(visible_1 == false)
+		assert_true(open_1 == true)
+		assert_true(did_begin_2 == false)
+		assert_eq(begin_calls, 1)
+		assert_eq(combo_calls, 1)
+		assert_eq(end_calls, 0)
+		assert_eq(#shown_messages, 1)
+		assert_contains(shown_messages[1], "test.window.main")
+		assert_true(type(state._imgui_guard_seen) == "table")
+		assert_true(type(state._imgui_guard_counts) == "table")
+		assert_eq(state._imgui_guard_counts["test.window.main"], 2)
+
+		imgui_guard.end_window({}, state, did_begin_1, "test.window.main")
+		assert_eq(end_calls, 0)
+	end, debug.traceback)
+	_G.reaper = old_reaper
+	assert_true(ok, err)
+end)
+
+run_case("imgui_guard end calls are conditional on successful begin", function()
+	local old_reaper = _G.reaper
+	local ok, err = xpcall(function()
+		local child_begin_calls = 0
+		local child_end_calls = 0
+		local combo_begin_calls = 0
+		local combo_end_calls = 0
+		local menu_begin_calls = 0
+		local menu_end_calls = 0
+
+		_G.reaper = {
+			ImGui_BeginChild = function()
+				child_begin_calls = child_begin_calls + 1
+				return true
+			end,
+			ImGui_EndChild = function()
+				child_end_calls = child_end_calls + 1
+			end,
+			ImGui_BeginCombo = function()
+				combo_begin_calls = combo_begin_calls + 1
+				return false
+			end,
+			ImGui_EndCombo = function()
+				combo_end_calls = combo_end_calls + 1
+			end,
+			ImGui_BeginMenuBar = function()
+				menu_begin_calls = menu_begin_calls + 1
+				return true
+			end,
+			ImGui_EndMenuBar = function()
+				menu_end_calls = menu_end_calls + 1
+			end,
+			ShowMessageBox = function()
+				return 0
+			end,
+		}
+
+		local state = {}
+		local did_child = imgui_guard.begin_child({}, state, "id", 10, 10, 0, 0, "test.child")
+		local did_combo = imgui_guard.begin_combo({}, state, "label", "preview", "test.combo")
+		local did_menu = imgui_guard.begin_menubar({}, state, "test.menu")
+
+		assert_true(did_child == true)
+		assert_true(did_combo == false)
+		assert_true(did_menu == true)
+
+		imgui_guard.end_child({}, state, did_child, "test.child")
+		imgui_guard.end_combo({}, state, did_combo, "test.combo")
+		imgui_guard.end_menubar({}, state, did_menu, "test.menu")
+
+		assert_eq(child_begin_calls, 1)
+		assert_eq(child_end_calls, 1)
+		assert_eq(combo_begin_calls, 1)
+		assert_eq(combo_end_calls, 0)
+		assert_eq(menu_begin_calls, 1)
+		assert_eq(menu_end_calls, 1)
+	end, debug.traceback)
+	_G.reaper = old_reaper
+	assert_true(ok, err)
 end)
 
 log("")

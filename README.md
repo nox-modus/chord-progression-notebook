@@ -240,6 +240,10 @@ For optional ways to support development, see `SUPPORT.md`.
 
 ## Version Change Summary
 
+### v0.9.2
+- Hotfix: fixed ReaPack package manifest to include `lib/ui/imgui_guard.lua`.
+- Resolves post-upgrade startup error `module 'lib.ui.imgui_guard' not found` seen in `v0.9.1`.
+
 ### v0.9.1
 - Hotfix: hardened ReaImGui `Begin*`/`End*` symmetry with guarded wrappers to prevent `ImGui_End: Calling End() too many times!` crashes.
 - Added one-time per-callsite Begin-failure diagnostics and guard counters for runtime debugging.

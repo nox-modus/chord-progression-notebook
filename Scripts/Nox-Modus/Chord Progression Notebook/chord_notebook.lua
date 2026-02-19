@@ -1,7 +1,7 @@
 -- @description Chord Progression Notebook
--- @version 0.9.1
+-- @version 0.9.2
 -- @author Nox-Modus
--- @changelog Hotfix: hardened ImGui Begin/End symmetry via guarded wrappers to prevent unmatched End() crashes; added guard regression tests.
+-- @changelog Hotfix: ReaPack packaging fix for missing lib/ui/imgui_guard.lua in 0.9.1; keeps Begin/End guard and regression coverage.
 -- @about
 --   Transparent chord progression notebook for REAPER.
 --   Features progression editing, Roman numerals, circle-of-fifths interaction,

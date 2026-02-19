@@ -6,13 +6,12 @@
         <description>Chord Progression Notebook for REAPER (ReaImGui)</description>
         <link rel="website">https://github.com/nox-modus/nox-chords-notebook</link>
       </metadata>
-      <version name="0.9.1" author="Nox-Modus" time="2026-02-19T12:00:00Z">
+      <version name="0.9.2" author="Nox-Modus" time="2026-02-19T15:00:00Z">
         <changelog><![CDATA[
-Hotfix 0.9.1
-- Hardened ReaImGui Begin*/End* symmetry using guarded wrappers.
-- Prevented unmatched End() crash path ("ImGui_End: Calling End() too many times!").
-- Added one-time per-callsite Begin-failure diagnostics for easier field debugging.
-- Added regression tests for guard behavior and raw End* lifecycle audit.
+Hotfix 0.9.2
+- Fixed ReaPack manifest packaging: added missing lib/ui/imgui_guard.lua source file.
+- Resolves startup error: module 'lib.ui.imgui_guard' not found.
+- Retains Begin*/End* guard hardening and regression tests from 0.9.1.
         ]]></changelog>
         <source main="main" file="Scripts/Nox-Modus/Chord Progression Notebook/chord_notebook.lua" type="script">https://raw.githubusercontent.com/nox-modus/nox-chords-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/chord_notebook.lua</source>
         <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/chord_model.lua" type="script">https://raw.githubusercontent.com/nox-modus/nox-chords-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/chord_model.lua</source>
@@ -25,6 +24,7 @@ Hotfix 0.9.1
         <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/undo.lua" type="script">https://raw.githubusercontent.com/nox-modus/nox-chords-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/undo.lua</source>
         <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_circle_of_fifths.lua" type="script">https://raw.githubusercontent.com/nox-modus/nox-chords-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_circle_of_fifths.lua</source>
         <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_circle_widget.lua" type="script">https://raw.githubusercontent.com/nox-modus/nox-chords-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_circle_widget.lua</source>
+        <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/imgui_guard.lua" type="script">https://raw.githubusercontent.com/nox-modus/nox-chords-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/imgui_guard.lua</source>
         <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_inspector.lua" type="script">https://raw.githubusercontent.com/nox-modus/nox-chords-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_inspector.lua</source>
         <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_layout.lua" type="script">https://raw.githubusercontent.com/nox-modus/nox-chords-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_layout.lua</source>
         <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_library.lua" type="script">https://raw.githubusercontent.com/nox-modus/nox-chords-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/ui/ui_library.lua</source>

@@ -1,7 +1,7 @@
 -- @description Chord Progression Notebook
--- @version 0.9.0
+-- @version 0.9.1
 -- @author Nox-Modus
--- @changelog Added undo stack wiring for project edits and menu action; incremental UX and stability updates.
+-- @changelog Hotfix: hardened ImGui Begin/End symmetry via guarded wrappers to prevent unmatched End() crashes; added guard regression tests.
 -- @about
 --   Transparent chord progression notebook for REAPER.
 --   Features progression editing, Roman numerals, circle-of-fifths interaction,

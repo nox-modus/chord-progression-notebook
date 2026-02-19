@@ -240,6 +240,11 @@ For optional ways to support development, see `SUPPORT.md`.
 
 ## Version Change Summary
 
+### v0.9.1
+- Hotfix: hardened ReaImGui `Begin*`/`End*` symmetry with guarded wrappers to prevent `ImGui_End: Calling End() too many times!` crashes.
+- Added one-time per-callsite Begin-failure diagnostics and guard counters for runtime debugging.
+- Added regression tests for guard behavior and static audit to prevent raw `ImGui_End*` lifecycle calls in UI modules.
+
 ### v0.9.0
 - Added full undo workflow for project edits (`Undo Last Change` in menu).
 - Added safety hardening for malformed library/progression/chord data.

@@ -6,7 +6,7 @@
         <description>Chord Progression Notebook for REAPER (ReaImGui)</description>
         <link rel="website">https://github.com/nox-modus/nox-chords-notebook</link>
       </metadata>
-      <version name="0.9.0" author="Nox-Modus" time="2026-02-16T12:00:00Z">
+      <version name="0.9.1" author="Nox-Modus" time="2026-02-19T12:00:00Z">
         <source main="main" file="Scripts/Nox-Modus/Chord Progression Notebook/chord_notebook.lua" type="script">https://raw.githubusercontent.com/nox-modus/nox-chords-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/chord_notebook.lua</source>
         <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/chord_model.lua" type="script">https://raw.githubusercontent.com/nox-modus/nox-chords-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/chord_model.lua</source>
         <source file="Scripts/Nox-Modus/Chord Progression Notebook/lib/harmony_engine.lua" type="script">https://raw.githubusercontent.com/nox-modus/nox-chords-notebook/main/Scripts/Nox-Modus/Chord%20Progression%20Notebook/lib/harmony_engine.lua</source>

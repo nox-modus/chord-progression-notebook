@@ -331,6 +331,52 @@ run_case("ui modules avoid raw ImGui End* lifecycle calls", function()
 	end
 end)
 
+run_case("reapack index includes required package files", function()
+	local index_path = path_join(root_clean, "index.xml")
+	local fh = io.open(index_path, "rb")
+	assert_true(fh ~= nil, "missing index.xml")
+	local xml = fh:read("*a") or ""
+	fh:close()
+
+	local source_files = {}
+	for file in xml:gmatch('file="([^"]+)"') do
+		source_files[file] = true
+	end
+
+	local required_sources = {
+		"Scripts/Nox-Modus/Chord Progression Notebook/chord_notebook.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/chord_model.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/harmony_engine.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/json.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/library_safety.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/midi_writer.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/reaper_api.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/storage.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/undo.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/imgui_guard.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_circle_of_fifths.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_circle_widget.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_inspector.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_layout.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_library.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_main.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_progression_lane.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_sections.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/lib/ui/ui_theme.lua",
+		"Scripts/Nox-Modus/Chord Progression Notebook/data/library.json",
+	}
+
+	for _, rel in ipairs(required_sources) do
+		assert_true(source_files[rel] == true, "missing index.xml source entry: " .. rel)
+		local local_path = path_join(root_clean, rel)
+		local local_fh = io.open(local_path, "rb")
+		assert_true(local_fh ~= nil, "source file listed but missing on disk: " .. rel)
+		if local_fh then
+			local_fh:close()
+		end
+	end
+end)
+
 run_case("imgui_guard begin failure is safe and logs once per callsite", function()
 	local old_reaper = _G.reaper
 	local ok, err = xpcall(function()

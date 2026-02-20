@@ -495,6 +495,54 @@ run_case("imgui_guard end calls are conditional on successful begin", function()
 	assert_true(ok, err)
 end)
 
+run_case("imgui_guard window/child do not end when Begin returns false", function()
+	local old_reaper = _G.reaper
+	local ok, err = xpcall(function()
+		local window_begin_calls = 0
+		local window_end_calls = 0
+		local child_begin_calls = 0
+		local child_end_calls = 0
+
+		_G.reaper = {
+			ImGui_Begin = function()
+				window_begin_calls = window_begin_calls + 1
+				return false, true
+			end,
+			ImGui_End = function()
+				window_end_calls = window_end_calls + 1
+			end,
+			ImGui_BeginChild = function()
+				child_begin_calls = child_begin_calls + 1
+				return false
+			end,
+			ImGui_EndChild = function()
+				child_end_calls = child_end_calls + 1
+			end,
+			ShowMessageBox = function()
+				return 0
+			end,
+		}
+
+		local state = {}
+		local did_window, visible = imgui_guard.begin_window({}, state, "Any", true, 0, "test.window.collapsed")
+		local did_child = imgui_guard.begin_child({}, state, "child", 10, 10, 0, 0, "test.child.hidden")
+
+		assert_true(did_window == false)
+		assert_true(visible == false)
+		assert_true(did_child == false)
+
+		imgui_guard.end_window({}, state, did_window, "test.window.collapsed")
+		imgui_guard.end_child({}, state, did_child, "test.child.hidden")
+
+		assert_eq(window_begin_calls, 1)
+		assert_eq(window_end_calls, 0)
+		assert_eq(child_begin_calls, 1)
+		assert_eq(child_end_calls, 0)
+	end, debug.traceback)
+	_G.reaper = old_reaper
+	assert_true(ok, err)
+end)
+
 log("")
 log(("Result: %d total, %d failed, %d passed"):format(total, failed, total - failed))
 

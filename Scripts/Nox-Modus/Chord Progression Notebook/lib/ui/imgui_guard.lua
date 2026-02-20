@@ -52,7 +52,7 @@ function imgui_guard.begin_window(ctx, state, label, p_open, flags, callsite)
 		report_failure(state, "ImGui_Begin", callsite, "Unexpected visible return type: " .. type(visible))
 		return false, false, p_open
 	end
-	return true, visible, open
+	return visible == true, visible, open
 end
 
 function imgui_guard.end_window(ctx, state, did_begin, callsite)
@@ -80,7 +80,7 @@ function imgui_guard.begin_child(ctx, state, id, w, h, border, flags, callsite)
 		report_failure(state, "ImGui_BeginChild", callsite, "Unexpected visible return type: " .. type(visible))
 		return false
 	end
-	return true
+	return visible == true
 end
 
 function imgui_guard.end_child(ctx, state, did_begin, callsite)

@@ -240,6 +240,12 @@ For optional ways to support development, see `SUPPORT.md`.
 
 ## Version Change Summary
 
+### v0.9.3
+- Hotfix: corrected ImGui guard lifecycle for collapsed/minimized windows.
+- `End()` / `EndChild()` are now skipped when `Begin()` / `BeginChild()` return `false`.
+- Resolves reported runtime errors: `ImGui_End: Calling End() too many times!` and follow-up `ImGui_PopStyleColor` invalid context messages.
+- Added regression coverage for the minimize/collapse code path.
+
 ### v0.9.2
 - Hotfix: fixed ReaPack package manifest to include `lib/ui/imgui_guard.lua`.
 - Resolves post-upgrade startup error `module 'lib.ui.imgui_guard' not found` seen in `v0.9.1`.

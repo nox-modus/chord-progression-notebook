@@ -1,7 +1,7 @@
 -- @description Chord Progression Notebook
--- @version 0.9.2
+-- @version 0.9.3
 -- @author Nox-Modus
--- @changelog Hotfix: ReaPack packaging fix for missing lib/ui/imgui_guard.lua in 0.9.1; keeps Begin/End guard and regression coverage.
+-- @changelog Hotfix: collapse/minimize lifecycle fix in ImGui guard (avoid End/EndChild when Begin returns false); prevents End()/PopStyleColor context errors.
 -- @about
 --   Transparent chord progression notebook for REAPER.
 --   Features progression editing, Roman numerals, circle-of-fifths interaction,

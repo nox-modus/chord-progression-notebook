@@ -60,12 +60,26 @@ Steps:
 5. Review import result dialog.
 6. Click `Save`.
 
-## 8. Playback
-1. Select a progression in either reference or project list.
-2. Click `Play Selected` to audition.
-3. Click `Stop` to stop preview.
-4. Toggle `Loop` to repeat playback.
-5. If `Voice Leading` is enabled, playback and insertion use smoother chord motion.
+## 8. Playback (How to Hear Sound in REAPER)
+`Play Selected` sends **live MIDI preview notes**. It does not create a MIDI item on the timeline.
+
+Use this setup once per project/session:
+1. Create/select a track for your instrument.
+2. Insert a virtual instrument on that track (for example ReaSynth/Kontakt/etc.).
+3. Enable `Record Arm` on that track.
+4. Enable `Input Monitoring` (speaker icon must be ON).
+5. Set track input to MIDI:
+- Use: `Input: MIDI -> All MIDI inputs -> All channels`
+- For current live preview implementation, this setting is required for consistent results.
+6. Select a progression in the script (reference or project).
+7. Click `Play Selected` to audition.
+8. Click `Stop` to stop preview.
+9. Toggle `Loop` to repeat playback.
+10. If `Voice Leading` is enabled, playback and insertion use smoother chord motion.
+
+If you prefer timeline playback instead of live preview:
+1. Click `Insert Progression MIDI`.
+2. Press REAPER transport `Play` to hear the inserted item through the same instrument track.
 
 ## 9. Reharm and Key Controls
 1. In left settings, choose `Key` and major/minor mode.
@@ -99,6 +113,12 @@ That progression has no unique reference mapping.
 3. **Import added 0 progressions**
 Imported entries were already present (duplicate by signature/ref_id).
 4. **Playback has no sound**
-Check MIDI routing/instrument on selected track and monitor settings.
+Check all of these:
+- Instrument FX is loaded on the target track.
+- Track is `Record Arm` ON.
+- `Input Monitoring` is ON.
+- Track MIDI input is set (`All MIDI inputs / All channels` is safest).
+- Track is not muted and master output routing is active.
+If live preview is still silent, test `Insert Progression MIDI` + transport `Play`. If inserted MIDI sounds, routing is fine and the issue is only live monitoring/input setup.
 5. **Library path confusion**
 Use menu `Show Library Path` to confirm where current project library is stored.
